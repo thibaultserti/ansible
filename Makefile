@@ -103,46 +103,46 @@ ansible-deps: ## Install dependencies
 	@echo -e "$(OK_COLOR) Install dependencies$(NO_COLOR)"
 	@. $(ANSIBLE_VENV)/bin/activate \
 		&& ANSIBLE_CONFIG=ansible/ansible.cfg \
-		ansible-galaxy install -r ansible/requirements.yml -p $(ANSIBLE_ROLES) --force
+		ansible-galaxy install -r roles/requirements.yml -p $(ANSIBLE_ROLES) --force
 
 .PHONY: ansible-ping
-ansible-ping: ## Check Ansible installation (SERVICE=xxx ENV=xxx)
+ansible-ping: ## Check Ansible installation
 	@echo -e "$(OK_COLOR) Check Ansible$(NO_COLOR)"
 	@. $(ANSIBLE_VENV)/bin/activate \
-		&& ANSIBLE_CONFIG=ansible/ansible.cfg \
+		&& ANSIBLE_CONFIG=ansible.cfg \
 		ANSIBLE_COLLECTIONS_PATH=$(ANSIBLE_COLLECTIONS_PATH) \
-		ANSIBLE_ROLES_PATH=ansible/roles/:$(ANSIBLE_ROLES_PATH) \
-		ansible -c local -m ping all -i ansible/inventories/inventory.ini
+		ANSIBLE_ROLES_PATH=roles/:$(ANSIBLE_ROLES_PATH) \
+		ansible -c local -m ping all -i inventories/bootstrap.ini
 
 .PHONY: ansible-debug
-ansible-debug: ## Retrieve informations from hosts (SERVICE=xxx ENV=xxx)
+ansible-debug: ## Retrieve informations from hosts
 	@echo -e "$(OK_COLOR) Check Ansible$(NO_COLOR)"
 	@. $(ANSIBLE_VENV)/bin/activate \
-		&& ANSIBLE_CONFIG=ansible/ansible.cfg \
+		&& ANSIBLE_CONFIG=ansible.cfg \
 		ANSIBLE_COLLECTIONS_PATH=$(ANSIBLE_COLLECTIONS_PATH) \
-		ANSIBLE_ROLES_PATH=ansible/roles/:$(ANSIBLE_ROLES_PATH) \
-		ansible -m setup all -i ansible/inventories/inventory.ini
+		ANSIBLE_ROLES_PATH=roles/:$(ANSIBLE_ROLES_PATH) \
+		ansible -m setup all -i inventories/bootstrap.ini
 
 
 .PHONY: ansible-run
-ansible-run: guard-PLAYBOOK ## Execute Ansible playbook (SERVICE=xxx)
-	@if [ ! -n "$(SKIP_DEPS)" ];then \
-		echo -e "I will pull deps for you, next time you can use SKIP_DEPS=true "; \
+ansible-run: guard-PLAYBOOK ## Execute Ansible playbook (PLAYBOOK=xxx)
+	@if [ -n "$(DEPS)" ];then \
+		echo -e "I will pull deps for you, next time you can use DEPS=false "; \
 		. $(ANSIBLE_VENV)/bin/activate \
-			&& make ansible-deps SERVICE=$(SERVICE); \
+			&& make ansible-deps SERVICE=$(PLAYBOOK); \
 	fi
 	@echo -e "$(OK_COLOR) Execute Ansible playbook$(NO_COLOR)"
 	@. $(ANSIBLE_VENV)/bin/activate \
-		&& ANSIBLE_CONFIG=ansible/ansible.cfg \
+		&& ANSIBLE_CONFIG=ansible.cfg \
 		ANSIBLE_COLLECTIONS_PATH=$(ANSIBLE_COLLECTIONS_PATH) \
-		ANSIBLE_ROLES_PATH=ansible/roles/:$(ANSIBLE_ROLES_PATH) \
-		ansible-playbook $(DEBUG) -i ansible/inventories/inventory.ini ansible/playbooks/$(PLAYBOOK).yml $(OPTIONS)
+		ANSIBLE_ROLES_PATH=roles/:$(ANSIBLE_ROLES_PATH) \
+		ansible-playbook $(DEBUG) -i inventories/bootstrap.ini playbooks/$(PLAYBOOK).yml $(OPTIONS)
 
 .PHONY: ansible-dryrun
-ansible-dryrun: guard-PLAYBOOK ## Execute Ansible playbook (SERVICE=xxx ENV=xxx)
+ansible-dryrun: guard-PLAYBOOK ## Execute Ansible playbook (PLAYBOOK=xxx)
 	@echo -e "$(OK_COLOR) Execute Ansible playbook$(NO_COLOR)"
 	@. $(ANSIBLE_VENV)/bin/activate \
-		&& ANSIBLE_CONFIG=ansible/ansible.cfg \
+		&& ANSIBLE_CONFIG=ansible.cfg \
 		ANSIBLE_COLLECTIONS_PATH=$(ANSIBLE_COLLECTIONS_PATH) \
-		ANSIBLE_ROLES_PATH=ansible/roles/:$(ANSIBLE_ROLES_PATH) \
-		ansible-playbook $(DEBUG) -i ansible/inventories/inventory.ini ansible/playbooks/$(PLAYBOOK).yml --check $(OPTIONS)
+		ANSIBLE_ROLES_PATH=roles/:$(ANSIBLE_ROLES_PATH) \
+		ansible-playbook $(DEBUG) -i inventories/bootstrap.ini playbooks/$(PLAYBOOK).yml --check $(OPTIONS)

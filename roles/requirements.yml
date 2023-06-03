@@ -1,0 +1,9 @@
+- name: node-exporter
+  src: cloudalchemy.node_exporter
+  version: 2.0.0
+- name: nginxinc.nginx
+  src: nginxinc.nginx
+  version: 0.24.0
+- name: geerlingguy.ansible
+  src: geerlingguy.ansible
+  version: 2.3.0

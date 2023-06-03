@@ -1,0 +1,10 @@
+---
+- name: Nginx
+  hosts: eros
+  become: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  vars_files:
+    - "../env_vars/nginx.yml"
+  roles:
+    - nginx

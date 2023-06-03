@@ -1,0 +1,44 @@
+---
+- name: Base
+  hosts: all
+  become: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  vars_files:
+    - "../env_vars/base.yml"
+  tasks:
+    - name: Ensure LC_ALL is set
+      ansible.builtin.lineinfile:
+        path: /etc/default/locale
+        regexp: '^LC_ALL='
+        line: LC_ALL=en_US.UTF-8
+    - name: Create the ansible user
+      ansible.builtin.user:
+        name: "{{ ansible_user }}"
+        shell: /bin/bash
+        home: /opt/ansible
+
+    - name: Make sure we have a 'wheel' group
+      ansible.builtin.group:
+        name: wheel
+        state: present
+
+    - name: Allow 'wheel' group to have passwordless sudo
+      ansible.builtin.lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^%wheel'
+        line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+        validate: visudo -cf %s
+
+    - name: Add sudoers users to wheel group
+      ansible.builtin.user:
+        name: "{{ ansible_user }}"
+        groups: wheel
+        append: yes
+
+    - name: Set authorized key taken from file
+      ansible.posix.authorized_key:
+        user: "{{ ansible_user }}"
+        state: present
+        key: "{{ lookup('file', lookup('env','PWD') + '/keys/ansible.pub') }}"
