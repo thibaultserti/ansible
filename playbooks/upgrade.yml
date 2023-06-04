@@ -1,3 +1,4 @@
+---
 - name: Upgrade
   hosts: all
   become: true
