@@ -2,7 +2,7 @@
   src: cloudalchemy.node_exporter
   version: 2.0.0
 - name: geerlingguy.nginx
-  src: nginxinc.nginx
+  src: geerlingguy.nginx
   version: 3.1.4
 - name: geerlingguy.ansible
   src: geerlingguy.ansible
