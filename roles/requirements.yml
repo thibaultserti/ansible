@@ -7,3 +7,9 @@
 - name: geerlingguy.ansible
   src: geerlingguy.ansible
   version: 2.3.0
+- name: geerlingguy.certbot
+  src: geerlingguy.certbot
+  version: 5.0.2
+- name: geerlingguy.pip
+  src: geerlingguy.pip
+  version: 2.2.0

@@ -42,3 +42,6 @@
         user: "{{ ansible_user }}"
         state: present
         key: "{{ lookup('file', lookup('env','PWD') + '/keys/ansible.pub') }}"
+
+  roles:
+    - geerlingguy.pip

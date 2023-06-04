@@ -6,5 +6,35 @@
     ansible_python_interpreter: /usr/bin/python3
   vars_files:
     - "../env_vars/nginx.yml"
+  pre_tasks:
+    - name: Install bottle python package
+      ansible.builtin.pip:
+        name: "{{ item }}"
+      loop:
+        - certbot
+        - certbot-dns-google-domains
+    - name: Copy DNS google domains API token
+      ansible.builtin.template:
+        src: "{{ lookup('env','PWD') + '/files/nginx/dns_google_domains_credentials.ini' }}"
+        dest: "{{ creds_path }}"
+        owner: root
+        group: root
+        mode: '0600'
+
   roles:
     - geerlingguy.nginx
+    - geerlingguy.certbot
+
+  post_tasks:
+    - name: Add option to reload Nginx when renewing certificate
+      ansible.builtin.lineinfile:
+        dest: /etc/letsencrypt/cli.ini
+        state: present
+        regexp: '^deploy-hook ='
+        line: 'deploy-hook = systemctl reload nginx'
+
+  handlers:
+    - name: Reload Nginx
+      ansible.builtin.systemd:
+        state: reloaded
+        name: nginx
