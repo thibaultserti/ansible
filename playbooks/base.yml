@@ -31,9 +31,15 @@
         line: '%wheel ALL=(ALL) NOPASSWD: ALL'
         validate: visudo -cf %s
 
-    - name: Add sudoers users to wheel group
+    - name: Add ansible user to wheel group
       ansible.builtin.user:
         name: "{{ ansible_user }}"
+        groups: wheel
+        append: yes
+
+    - name: Add admin user to wheel group
+      ansible.builtin.user:
+        name: "{{ admin_user }}"
         groups: wheel
         append: yes
 
