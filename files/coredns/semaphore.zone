@@ -1,9 +1,0 @@
-$ORIGIN ayanides.cloud.  ; designates the start of this zone file in the namespace
-$TTL 1h                  ; default expiration time of all resource records without their own TTL value
-
-
-@                 IN  SOA     core.ayanides.cloud. 2023060718 7200 3600 1209600 3600
-                  IN  NS      ns.ayanides.cloud.
-
-
-@                 IN  A       192.168.0.40

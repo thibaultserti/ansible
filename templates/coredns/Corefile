@@ -1,5 +1,13 @@
 ayanides.cloud:53 {
-    file /etc/coredns/zones/semaphore.zone
+    file /etc/coredns/zones/ayanides.cloud.zone ayanides.cloud
+    log
+    errors
+    header {
+        response set ra # set RecursionAvailable flag
+    }
+}
+168.192.in-addr.arpa:53 {
+    file /etc/coredns/zones/reverse-ayanides.cloud.zone 168.192.in-addr.arpa.
     log
     errors
 }

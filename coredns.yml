@@ -20,6 +20,12 @@
   roles:
     - cloudalchemy.coredns
 
+  # post_tasks:
+  #   - name: Restart coredns
+  #     ansible.builtin.systemd:
+  #       state: restarted
+  #       name: coredns
+
   handlers:
     - name: Restart systemd-resolved
       ansible.builtin.systemd:
