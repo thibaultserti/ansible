@@ -15,7 +15,7 @@
         - certbot-dns-google-domains
     - name: Copy DNS google domains API token
       ansible.builtin.template:
-        src: "nginx/dns_google_domains_credentials.ini' }}"
+        src: "nginx/dns_google_domains_credentials.ini"
         dest: "{{ creds_path }}"
         owner: root
         group: root
