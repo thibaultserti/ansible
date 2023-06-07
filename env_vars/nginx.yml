@@ -16,8 +16,7 @@ certbot_create_command: |-
 certbot_create_method: standalone
 certbot_certs:
   - domains:
-    - semaphore.ayanides.cloud
-    - pihole.ayanides.cloud
+    - '*.ayanides.cloud'
 
 nginx_vhosts:
 # SEMAPHORE
@@ -56,8 +55,8 @@ nginx_vhosts:
       # add Strict-Transport-Security to prevent man in the middle attacks
       add_header Strict-Transport-Security "max-age=31536000" always;
 
-      ssl_certificate     /etc/letsencrypt/live/semaphore.ayanides.cloud/fullchain.pem;
-      ssl_certificate_key /etc/letsencrypt/live/semaphore.ayanides.cloud/privkey.pem;
+      ssl_certificate     /etc/letsencrypt/live/ayanides.cloud/fullchain.pem;
+      ssl_certificate_key /etc/letsencrypt/live/ayanides.cloud/privkey.pem;
 
       ssl_protocols       TLSv1.2 TLSv1.3;
       ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
@@ -91,8 +90,8 @@ nginx_vhosts:
       # add Strict-Transport-Security to prevent man in the middle attacks
       add_header Strict-Transport-Security "max-age=31536000" always;
 
-      ssl_certificate     /etc/letsencrypt/live/pihole.ayanides.cloud/fullchain.pem;
-      ssl_certificate_key /etc/letsencrypt/live/pihole.ayanides.cloud/privkey.pem;
+      ssl_certificate     /etc/letsencrypt/live/ayanides.cloud/fullchain.pem;
+      ssl_certificate_key /etc/letsencrypt/live/ayanides.cloud/privkey.pem;
 
       ssl_protocols       TLSv1.2 TLSv1.3;
       ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
