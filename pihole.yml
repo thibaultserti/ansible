@@ -1,0 +1,26 @@
+---
+- name: Pihole
+  hosts: eros
+  become: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+    - name: Install bottle python package
+      ansible.builtin.pip:
+        name: docker-compose
+    - name: Create directory
+      ansible.builtin.file:
+        path: /opt/pihole
+        state: directory
+        owner: root
+        group: root
+        mode: '0644'
+    - name: copy docker-compose.yaml
+      ansible.builtin.copy:
+        src: pihole/docker-compose.yaml
+        dest: /opt/pihole/docker-compose.yaml
+    - name: Run `docker-compose up` again
+      community.docker.docker_compose:
+        project_src: /opt/pihole
+        build: false
+      register: output
