@@ -1,0 +1,12 @@
+ayanides.cloud:53 {
+    file /etc/coredns/zones/semaphore.zone
+    log
+    errors
+}
+
+.:53 {
+    log
+    errors
+    forward . 8.8.8.8 8.8.4.4
+    cache
+}

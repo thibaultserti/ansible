@@ -5,7 +5,7 @@
   vars:
     ansible_python_interpreter: /usr/bin/python3
   vars_files:
-    - "../env_vars/base.yml"
+    - "env_vars/base.yml"
   tasks:
     - name: Ensure LC_ALL is set
       ansible.builtin.lineinfile:

@@ -1,0 +1,4 @@
+coredns_config_file: coredns/Corefile
+coredns_zone_files_paths:
+  - coredns/semaphore.zone
+coredns_version: 1.10.1

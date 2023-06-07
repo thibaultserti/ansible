@@ -5,7 +5,7 @@
   vars:
     ansible_python_interpreter: /usr/bin/python3
   vars_files:
-    - "../env_vars/semaphore.yml"
+    - "env_vars/semaphore.yml"
   tasks:
     - name: Install semaphore deb
       ansible.builtin.apt:
@@ -13,7 +13,7 @@
 
     - name: Create config
       ansible.builtin.template:
-        src: "{{ lookup('env','PWD') + '/templates/semaphore/config.json.j2' }}"
+        src: "semaphore/config.json.j2"
         dest: "{{ semaphore_home }}/{{ semaphore_config_file }}"
         owner: "{{ semaphore_user }}"
         group: "{{ semaphore_user }}"
@@ -36,7 +36,7 @@
 
     - name: Create systemd file
       ansible.builtin.template:
-        src: "{{ lookup('env','PWD') + '/templates/semaphore/semaphore.service.j2' }}"
+        src: "semaphore/semaphore.service.j2"
         dest: "/etc/systemd/system/semaphore.service"
         owner: root
         group: root

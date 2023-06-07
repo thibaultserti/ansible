@@ -1,0 +1,27 @@
+---
+- name: CoreDNS
+  hosts: eros
+  become: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  vars_files:
+    - "env_vars/coredns.yml"
+  pre_tasks:
+    - name: Create config
+      ansible.builtin.template:
+        src: "coredns/10-DNSStubListenerNo.conf"
+        dest: "/etc/systemd/resolved.conf.d/"
+        owner: "root"
+        group: "root"
+        mode: '0644'
+      notify:
+        - Restart systemd-resolved
+
+  roles:
+    - cloudalchemy.coredns
+
+  handlers:
+    - name: Restart systemd-resolved
+      ansible.builtin.systemd:
+        state: restarted
+        name: systemd-resolved

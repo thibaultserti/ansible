@@ -136,7 +136,7 @@ ansible-run: guard-PLAYBOOK ## Execute Ansible playbook (PLAYBOOK=xxx)
 		&& ANSIBLE_CONFIG=ansible.cfg \
 		ANSIBLE_COLLECTIONS_PATH=$(ANSIBLE_COLLECTIONS_PATH) \
 		ANSIBLE_ROLES_PATH=roles/:$(ANSIBLE_ROLES_PATH) \
-		ansible-playbook $(DEBUG) -i inventories/bootstrap.ini playbooks/$(PLAYBOOK).yml $(OPTIONS)
+		ansible-playbook $(DEBUG) -i inventories/bootstrap.ini $(PLAYBOOK).yml $(OPTIONS)
 
 .PHONY: ansible-dryrun
 ansible-dryrun: guard-PLAYBOOK ## Execute Ansible playbook (PLAYBOOK=xxx)
@@ -145,4 +145,4 @@ ansible-dryrun: guard-PLAYBOOK ## Execute Ansible playbook (PLAYBOOK=xxx)
 		&& ANSIBLE_CONFIG=ansible.cfg \
 		ANSIBLE_COLLECTIONS_PATH=$(ANSIBLE_COLLECTIONS_PATH) \
 		ANSIBLE_ROLES_PATH=roles/:$(ANSIBLE_ROLES_PATH) \
-		ansible-playbook $(DEBUG) -i inventories/bootstrap.ini playbooks/$(PLAYBOOK).yml --check $(OPTIONS)
+		ansible-playbook $(DEBUG) -i inventories/bootstrap.ini $(PLAYBOOK).yml --check $(OPTIONS)

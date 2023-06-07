@@ -5,7 +5,7 @@
   vars:
     ansible_python_interpreter: /usr/bin/python3
   vars_files:
-    - "../env_vars/nginx.yml"
+    - "env_vars/nginx.yml"
   pre_tasks:
     - name: Install bottle python package
       ansible.builtin.pip:
@@ -15,7 +15,7 @@
         - certbot-dns-google-domains
     - name: Copy DNS google domains API token
       ansible.builtin.template:
-        src: "{{ lookup('env','PWD') + '/files/nginx/dns_google_domains_credentials.ini' }}"
+        src: "nginx/dns_google_domains_credentials.ini' }}"
         dest: "{{ creds_path }}"
         owner: root
         group: root
