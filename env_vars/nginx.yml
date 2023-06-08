@@ -18,82 +18,38 @@ certbot_certs:
   - domains:
     - '*.ayanides.cloud'
 
+
+wildcard_domain: ayanides.cloud
+nginx_vhost_template: nginx/vhost.j2
 nginx_vhosts:
 # SEMAPHORE
-  - listen: "443 ssl http2"
-    server_name: "semaphore.ayanides.cloud"
-    root: "/usr/share/nginx/html"
-    index: "index.html index.htm"
-    state: "present"
-    template: "{{ nginx_vhost_template }}"
-    filename: "semaphore.ayanides.cloud.conf"
-    extra_parameters: |
-      location / {
-        proxy_pass http://127.0.0.1:3000;
-        proxy_set_header Host $http_host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  - server_name: semaphore.ayanides.cloud
+    listen: 443 ssl http2
+    locations:
+      - proxy_pass: http://127.0.0.1:3000
+      - proxy_pass: http://127.0.0.1:3000/api/ws
+        path: /api/ws
+        default: false
+        extra_parameters: |
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "upgrade";
+          proxy_set_header Origin "";
 
-        proxy_set_header X-Forwarded-Proto $scheme;
-
-        proxy_buffering off;
-        proxy_request_buffering off;
-      }
-
-      location /api/ws {
-        proxy_pass http://127.0.0.1:3000/api/ws;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-        proxy_set_header Origin "";
-      }
-
-      # required to avoid HTTP 411: see Issue #1486
-      # (https://github.com/docker/docker/issues/1486)
-      chunked_transfer_encoding on;
-
-      # add Strict-Transport-Security to prevent man in the middle attacks
-      add_header Strict-Transport-Security "max-age=31536000" always;
-
-      ssl_certificate     /etc/letsencrypt/live/ayanides.cloud/fullchain.pem;
-      ssl_certificate_key /etc/letsencrypt/live/ayanides.cloud/privkey.pem;
-
-      ssl_protocols       TLSv1.2 TLSv1.3;
-      ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
-      ssl_prefer_server_ciphers on;
-      ssl_session_cache shared:SSL:10m;
 # PIHOLE
-  - listen: "443 ssl http2"
-    server_name: "pihole.ayanides.cloud"
-    root: "/usr/share/nginx/html"
-    index: "index.html index.htm"
-    state: "present"
-    template: "{{ nginx_vhost_template }}"
-    filename: "pihole.ayanides.cloud.conf"
-    extra_parameters: |
-      location / {
-        proxy_pass http://127.0.0.1:8000;
-        proxy_set_header Host $http_host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  - server_name: pihole.ayanides.cloud
+    listen: 443 ssl http2
+    locations:
+      - proxy_pass: http://127.0.0.1:8000
 
-        proxy_set_header X-Forwarded-Proto $scheme;
+# BOX
+  - server_name: box.ayanides.cloud
+    listen: 443 ssl http2
+    locations:
+      - proxy_pass: http://192.168.0.1:80
 
-        proxy_buffering off;
-        proxy_request_buffering off;
-      }
-
-      # required to avoid HTTP 411: see Issue #1486
-      # (https://github.com/docker/docker/issues/1486)
-      chunked_transfer_encoding on;
-
-      # add Strict-Transport-Security to prevent man in the middle attacks
-      add_header Strict-Transport-Security "max-age=31536000" always;
-
-      ssl_certificate     /etc/letsencrypt/live/ayanides.cloud/fullchain.pem;
-      ssl_certificate_key /etc/letsencrypt/live/ayanides.cloud/privkey.pem;
-
-      ssl_protocols       TLSv1.2 TLSv1.3;
-      ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
-      ssl_prefer_server_ciphers on;
-      ssl_session_cache shared:SSL:10m;
+# ROUTER
+  - server_name: router.ayanides.cloud
+    listen: 443 ssl http2
+    locations:
+      - proxy_pass: http://192.168.1.1:80
