@@ -42,9 +42,6 @@ server {
     return {{ item.return }};
 {% endif %}
 
-{# {% if item.extra_parameters is defined %}
-    {{ item.extra_parameters|indent(4) }}
-{% endif %} #}
 
 {% for location in item.locations %}
 
@@ -59,6 +56,9 @@ server {
 
         proxy_buffering off;
         proxy_request_buffering off;
+{% endif %}
+{% if location.redirect_path is defined %}
+        rewrite ^{{ location.path | default('/') }}$ http://{{ item.server_name }}{{ location.redirect_path }} permanent;
 {% endif %}
 {% if location.extra_parameters is defined %}
         {{ location.extra_parameters|indent(8) }}
