@@ -4,6 +4,17 @@
   become: true
   vars:
     ansible_python_interpreter: /usr/bin/python3
+  pre_tasks:
+    - name: Create config
+      ansible.builtin.template:
+        src: "pihole/10-DNSStubListenerNo.conf"
+        dest: "/etc/systemd/resolved.conf.d/"
+        owner: "root"
+        group: "root"
+        mode: '0644'
+      notify:
+        - Restart systemd-resolved
+        - Restart systemd-networkd
   tasks:
     - name: Install docker-compose
       ansible.builtin.pip:
@@ -24,3 +35,13 @@
         project_src: /opt/pihole
         build: false
       register: output
+
+  handlers:
+    - name: Restart systemd-resolved
+      ansible.builtin.systemd:
+        state: restarted
+        name: systemd-resolved
+    - name: Restart systemd-networkd
+      ansible.builtin.systemd:
+        state: restarted
+        name: systemd-networkd

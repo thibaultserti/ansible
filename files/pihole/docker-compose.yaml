@@ -10,6 +10,9 @@ services:
       - "53:53/tcp"
       - "53:53/udp"
       - "8000:80/tcp"
+    dns:
+      - 127.0.0.1
+
     environment:
       TZ: 'Europe/Paris'
       # WEBPASSWORD: 'set a secure password here or it will be random'
