@@ -41,15 +41,3 @@ nginx_vhosts:
     listen: 443 ssl http2
     locations:
       - proxy_pass: http://127.0.0.1:8000
-
-# BOX
-  - server_name: box.ayanides.cloud
-    listen: 443 ssl http2
-    locations:
-      - proxy_pass: http://192.168.0.1:80
-
-# ROUTER
-  - server_name: router.ayanides.cloud
-    listen: 443 ssl http2
-    locations:
-      - proxy_pass: http://192.168.1.1:80
