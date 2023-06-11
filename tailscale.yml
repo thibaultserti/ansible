@@ -6,5 +6,10 @@
     ansible_python_interpreter: /usr/bin/python3
   vars_files:
     - "env_vars/tailscale.yml"
+  pre_tasks:
+    - name: Print the gateway for each host when defined
+      ansible.builtin.debug:
+        msg: System {{ tailscale_authkey }}
+      when: tailscale_authkey is defined
   roles:
     - role: artis3n.tailscale
