@@ -7,6 +7,10 @@
   vars_files:
     - "env_vars/nginx.yml"
   pre_tasks:
+    - name: Fail if "dns_google_domains_credentials" is undefined
+      ansible.builtin.fail: msg="Bailing out. This play requires 'dns_google_domains_credentials'"
+      when: dns_google_domains_credentials is undefined
+
     - name: Install bottle python package
       ansible.builtin.pip:
         name: "{{ item }}"

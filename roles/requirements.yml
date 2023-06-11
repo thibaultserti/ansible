@@ -13,7 +13,6 @@
 - name: geerlingguy.pip
   src: geerlingguy.pip
   version: 2.2.0
-
-# - name: cloudalchemy.coredns
-#   src: cloudalchemy.coredns
-#   version: 2.0.0
+- name: artis3n.tailscale
+  src: artis3n.tailscale
+  version: v4.2.2
