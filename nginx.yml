@@ -7,19 +7,19 @@
   vars_files:
     - "env_vars/nginx.yml"
   pre_tasks:
-    - name: Fail if "dns_google_domains_credentials" is undefined
-      ansible.builtin.fail: msg="Bailing out. This play requires 'dns_google_domains_credentials'"
-      when: dns_google_domains_credentials is undefined
+    - name: Fail if "dns_cloudflare_api_token" is undefined
+      ansible.builtin.fail: msg="Bailing out. This play requires 'dns_cloudflare_api_token'"
+      when: dns_cloudflare_api_token is undefined
 
     - name: Install bottle python package
       ansible.builtin.pip:
         name: "{{ item }}"
       loop:
         - certbot
-        - certbot-dns-google-domains
-    - name: Copy DNS google domains API token
+        - certbot-dns-cloudflare
+    - name: Copy DNS CloudFlare API token
       ansible.builtin.template:
-        src: "nginx/dns_google_domains_credentials.ini"
+        src: "nginx/dns_cloudflare_api_token.ini"
         dest: "{{ creds_path }}"
         owner: root
         group: root

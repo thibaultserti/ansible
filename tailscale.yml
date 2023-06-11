@@ -13,3 +13,5 @@
       when: tailscale_authkey is defined
   roles:
     - role: artis3n.tailscale
+      vars:
+        tailscale_args: "--ssh {{ '--accept-dns=false' if is_dns else '' }}"

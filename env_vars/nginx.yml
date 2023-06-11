@@ -1,17 +1,14 @@
 ---
-creds_path: /var/lib/letsencrypt/dns_google_domains_credentials.ini
+creds_path: /var/lib/letsencrypt/dns_cloudflare_api_token.ini
 
-certbot_admin_email: thibault.ayanides@free.fr
 certbot_create_if_missing: true
 certbot_create_standalone_stop_services: []
 certbot_create_command: |-
   certbot certonly --noninteractive
-                  --authenticator 'dns-google-domains'
+                  --dns-cloudflare
                   --agree-tos
-                  --email {{ cert_item.email | default(certbot_admin_email) }}
                   --server 'https://acme-v02.api.letsencrypt.org/directory'
-                  --dns-google-domains-zone 'ayanides.cloud'
-                  --dns-google-domains-credentials '{{ creds_path }}'
+                  --dns-cloudflare-credentials '{{ creds_path }}'
                   -d {{ cert_item.domains | join(',') }}
 certbot_create_method: standalone
 certbot_certs:
