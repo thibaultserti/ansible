@@ -1,0 +1,43 @@
+# Requirements
+
+modules:
+  - overlay
+  - br_netfilter
+
+# K8S
+kubernetes_packages:
+  - name: kubelet
+    state: present
+  - name: kubectl
+    state: present
+  - name: kubeadm
+    state: present
+  - name: kubernetes-cni
+    state: present
+
+kubernetes_version: '1.27'
+
+kubernetes_kubeadm_kubelet_config_file_path: '/etc/kubernetes/kubeadm-kubelet-config.yaml'
+
+kubernetes_config_init_configuration:
+  localAPIEndpoint:
+    advertiseAddress: "{{ kubernetes_apiserver_advertise_address | default(ansible_default_ipv4.address, true) }}"
+
+kubernetes_config_cluster_configuration:
+  kubernetesVersion: "{{ kubernetes_version_kubeadm }}"
+
+kubernetes_config_kubelet_configuration:
+  cgroupDriver: systemd
+
+kubernetes_config_kube_proxy_configuration: {}
+
+kubernetes_allow_pods_on_control_plane: true
+
+kubernetes_pod_network:
+  cni: ''
+
+kubernetes_apt_release_channel: main
+kubernetes_apt_repository: "deb http://apt.kubernetes.io/ kubernetes-xenial {{ kubernetes_apt_release_channel }}"
+kubernetes_apt_ignore_key_error: false
+
+cilium_cli_version: v0.14.7

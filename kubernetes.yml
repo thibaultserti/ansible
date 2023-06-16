@@ -1,0 +1,8 @@
+---
+- name: Kubernetes
+  hosts: belt
+  become: true
+  vars_files:
+    - "env_vars/kubernetes.yml"
+  roles:
+    - geerlingguy.kubernetes

@@ -104,7 +104,7 @@ ansible-deps: ## Install dependencies
 	@. $(ANSIBLE_VENV)/bin/activate \
 		&& ANSIBLE_CONFIG=ansible/ansible.cfg \
 		ansible-galaxy install -r roles/requirements.yml -p $(ANSIBLE_ROLES) --force && \
-		ansible-galaxy collection install -r collections/requirements.yml --force
+		ansible-galaxy collection install -r roles/requirements.yml --force
 
 
 .PHONY: ansible-ping

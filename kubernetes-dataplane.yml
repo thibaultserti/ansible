@@ -1,7 +1,0 @@
----
-- name: Kubernetes Dataplane
-  hosts: dataplane
-  become: true
-  vars_files:
-    - "env_vars/kubernetes-dataplane.yml"
-  roles:
