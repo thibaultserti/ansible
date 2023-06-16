@@ -1,0 +1,7 @@
+---
+- name: Kubernetes Controlplane
+  hosts: controlplane
+  become: true
+  vars_files:
+    - "env_vars/kubernetes-controlplane.yml"
+  roles:

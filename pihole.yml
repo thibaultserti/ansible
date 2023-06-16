@@ -1,9 +1,7 @@
 ---
 - name: Pihole
-  hosts: eros
+  hosts: control
   become: true
-  vars:
-    ansible_python_interpreter: /usr/bin/python3
   pre_tasks:
     - name: Create config
       ansible.builtin.template:

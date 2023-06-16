@@ -13,6 +13,9 @@
 - name: geerlingguy.pip
   src: geerlingguy.pip
   version: 2.2.0
+- name: geerlingguy.kubernetes
+  src: geerlingguy.kubernetes
+  version: 7.1.2
 - name: artis3n.tailscale
   src: artis3n.tailscale
   version: v4.2.2

@@ -114,7 +114,7 @@ ansible-ping: ## Check Ansible installation
 		&& ANSIBLE_CONFIG=ansible.cfg \
 		ANSIBLE_COLLECTIONS_PATH=$(ANSIBLE_COLLECTIONS_PATH) \
 		ANSIBLE_ROLES_PATH=roles/:$(ANSIBLE_ROLES_PATH) \
-		ansible -c local -m ping all -i inventories/bootstrap.ini
+		ansible -c local -m ping all -i inventories/inventory.ini
 
 .PHONY: ansible-debug
 ansible-debug: ## Retrieve informations from hosts
@@ -123,7 +123,7 @@ ansible-debug: ## Retrieve informations from hosts
 		&& ANSIBLE_CONFIG=ansible.cfg \
 		ANSIBLE_COLLECTIONS_PATH=$(ANSIBLE_COLLECTIONS_PATH) \
 		ANSIBLE_ROLES_PATH=roles/:$(ANSIBLE_ROLES_PATH) \
-		ansible -m setup all -i inventories/bootstrap.ini
+		ansible -m setup all -i inventories/inventory.ini
 
 
 .PHONY: ansible-run
@@ -138,7 +138,7 @@ ansible-run: guard-PLAYBOOK ## Execute Ansible playbook (PLAYBOOK=xxx)
 		&& ANSIBLE_CONFIG=ansible.cfg \
 		ANSIBLE_COLLECTIONS_PATH=$(ANSIBLE_COLLECTIONS_PATH) \
 		ANSIBLE_ROLES_PATH=roles/:$(ANSIBLE_ROLES_PATH) \
-		ansible-playbook $(DEBUG) -i inventories/bootstrap.ini $(PLAYBOOK).yml $(OPTIONS)
+		ansible-playbook $(DEBUG) -i inventories/inventory.ini $(PLAYBOOK).yml $(OPTIONS)
 
 .PHONY: ansible-dryrun
 ansible-dryrun: guard-PLAYBOOK ## Execute Ansible playbook (PLAYBOOK=xxx)
@@ -147,4 +147,4 @@ ansible-dryrun: guard-PLAYBOOK ## Execute Ansible playbook (PLAYBOOK=xxx)
 		&& ANSIBLE_CONFIG=ansible.cfg \
 		ANSIBLE_COLLECTIONS_PATH=$(ANSIBLE_COLLECTIONS_PATH) \
 		ANSIBLE_ROLES_PATH=roles/:$(ANSIBLE_ROLES_PATH) \
-		ansible-playbook $(DEBUG) -i inventories/bootstrap.ini $(PLAYBOOK).yml --check $(OPTIONS)
+		ansible-playbook $(DEBUG) -i inventories/inventory.ini $(PLAYBOOK).yml --check $(OPTIONS)

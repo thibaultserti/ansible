@@ -1,11 +1,10 @@
 ---
 - name: Semaphore
-  hosts: eros
+  hosts: control
   become: true
-  vars:
-    ansible_python_interpreter: /usr/bin/python3
   vars_files:
     - "env_vars/semaphore.yml"
+    - "env_vars/base.yml"
   tasks:
     - name: Install semaphore deb
       ansible.builtin.apt:
