@@ -4,3 +4,5 @@ admin_user: tibo
 
 packages:
   - lm-sensors
+  - traceroute
+  - htop
