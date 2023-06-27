@@ -2,6 +2,8 @@
 - name: Pihole
   hosts: control
   become: true
+  vars_files:
+  - "env_vars/pihole.yml"
   pre_tasks:
     - name: Create config
       ansible.builtin.template:
@@ -24,15 +26,25 @@
         owner: root
         group: root
         mode: '0644'
-    - name: copy docker-compose.yaml
+    - name: Copy docker-compose.yaml
       ansible.builtin.copy:
         src: pihole/docker-compose.yaml
         dest: /opt/pihole/docker-compose.yaml
-    - name: Run `docker-compose up` again
+    - name: Run `docker-compose up`
       community.docker.docker_compose:
         project_src: /opt/pihole
         build: false
       register: output
+    - name: Create wildcard redirect
+      ansible.builtin.template:
+        src: "pihole/02-my-wildcard-dns.conf"
+        dest: /opt/pihole
+        owner: root
+        group: root
+        mode: '0644'
+    - name: Information
+      ansible.builtin.debug:
+        msg: Add a record on pihole Local DNS and delete it to reload dnsmask so that the wildcard zone is used
 
   handlers:
     - name: Restart systemd-resolved
