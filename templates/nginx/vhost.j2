@@ -25,9 +25,6 @@ server {
     server_name {{ item.server_name }};
 {% endif %}
 
-    root {{ item.root | default('/usr/share/nginx/html') }};
-    index {{ item.index | default('index.html index.htm') }};
-
 {% if item.error_page is defined %}
     error_page {{ item.error_page }};
 {% endif %}
@@ -74,6 +71,7 @@ server {
     # add Strict-Transport-Security to prevent man in the middle attacks
     add_header Strict-Transport-Security "max-age=31536000" always;
 
+{% if item.listen is defined and "443" in item.listen %}
     ssl_certificate     /etc/letsencrypt/live/{{wildcard_domain}}/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/{{wildcard_domain}}/privkey.pem;
 
@@ -81,6 +79,7 @@ server {
     ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
     ssl_prefer_server_ciphers on;
     ssl_session_cache shared:SSL:10m;
+{% endif %}
 
 }
     {% endblock %}
