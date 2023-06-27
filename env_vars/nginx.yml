@@ -17,6 +17,7 @@ certbot_certs:
 
 
 wildcard_domain: ayanides.cloud
+nginx_remove_default_vhost: true
 nginx_vhost_template: nginx/vhost.j2
 nginx_vhosts:
 # SEMAPHORE
