@@ -1,12 +1,12 @@
 {% block server_redirect %}
 {% if item.server_name_redirect is defined %}
 server {
-    listen       {{ item.listen | default('80') }};
+    listen       80;
 {% if nginx_listen_ipv6 %}
-    listen       [::]:{{ item.listen | default('80') }};
+    listen       [::]:80;
 {% endif %}
     server_name  {{ item.server_name_redirect }};
-    return       301 $scheme://{{ item.server_name.split(' ')[0] }}$request_uri;
+    return       301 https://{{ item.server_name.split(' ')[0] }}$request_uri;
 }
 {% endif %}
 {% endblock %}
@@ -58,7 +58,7 @@ server {
         proxy_request_buffering off;
 {% endif %}
 {% if location.redirect_path is defined %}
-        rewrite ^{{ location.path | default('/') }}$ http://{{ item.server_name }}{{ location.redirect_path }} permanent;
+        rewrite ^{{ location.path | default('/') }}$ $scheme://{{ item.server_name }}{{ location.redirect_path }} permanent;
 {% endif %}
 {% if location.extra_parameters is defined %}
         {{ location.extra_parameters|indent(8) }}
