@@ -15,6 +15,7 @@
       loop:
         - certbot
         - certbot-dns-cloudflare
+
     - name: Copy DNS CloudFlare API token
       ansible.builtin.template:
         src: "nginx/dns_cloudflare_api_token.ini"
@@ -34,9 +35,3 @@
         state: present
         regexp: '^deploy-hook ='
         line: 'deploy-hook = systemctl reload nginx'
-
-  handlers:
-    - name: Reload Nginx
-      ansible.builtin.systemd:
-        state: reloaded
-        name: nginx

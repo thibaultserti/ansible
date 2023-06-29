@@ -5,6 +5,9 @@ modules:
   - br_netfilter
 
 # K8S
+
+resolvConf: /etc/kubernetes/kubelet-custom-resolv.conf
+
 kubernetes_packages:
   - name: kubelet
     state: present
