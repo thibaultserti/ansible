@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  tfc_agent:
+    container_name: tfc_agent
+    image: hashicorp/tfc-agent:latest
+    environment:
+      TFC_AGENT_TOKEN: {{ token }}
+      TFC_AGENT_NAME: {{ agent_name }}
+    restart: unless-stopped

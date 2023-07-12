@@ -37,7 +37,7 @@
       register: output
     - name: Create wildcard redirect
       ansible.builtin.template:
-        src: "pihole/02-my-wildcard-dns.conf"
+        src: pihole/02-my-wildcard-dns.conf
         dest: /opt/pihole
         owner: root
         group: root
