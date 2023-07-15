@@ -1,0 +1,62 @@
+---
+- name: Semaphore
+  hosts: control
+  become: true
+  vars_files:
+    - "env_vars/semaphore.yml"
+    - "env_vars/base.yml"
+  tasks:
+    - name: Install semaphore deb
+      ansible.builtin.apt:
+        deb: "https://github.com/ansible-semaphore/semaphore/releases/download/v{{ semaphore_version }}/semaphore_{{ semaphore_version }}_linux_amd64.deb"
+
+    - name: Create config
+      ansible.builtin.template:
+        src: "semaphore/config.json.j2"
+        dest: "{{ semaphore_home }}/{{ semaphore_config_file }}"
+        owner: "{{ semaphore_user }}"
+        group: "{{ semaphore_user }}"
+        mode: '0644'
+      notify:
+        - Restart semaphore
+
+
+    - name: Get admin user
+      ansible.builtin.command:
+        cmd: semaphore user get --login={{ semaphore_admin_user }}
+      register: result
+      failed_when: false
+      changed_when: false
+
+    - name: Create admin user
+      ansible.builtin.command:
+        cmd: semaphore user add --admin --login={{ semaphore_admin_user }} --password={{ semaphore_admin_password }} --name {{ semaphore_admin_user }} --email={{ semaphore_admin_email }}
+      when: result is failed
+
+    - name: Create systemd file
+      ansible.builtin.template:
+        src: "semaphore/semaphore.service.j2"
+        dest: "/etc/systemd/system/semaphore.service"
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Just force systemd to reread configs (2.4 and above)
+      ansible.builtin.systemd:
+        daemon_reload: true
+
+    - name: Start semaphore
+      ansible.builtin.systemd:
+        state: started
+        daemon_reload: true
+        enabled: true
+        name: semaphore
+
+  roles:
+    - role: geerlingguy.ansible
+
+  handlers:
+    - name: Restart semaphore
+      ansible.builtin.systemd:
+        state: restarted
+        name: semaphore

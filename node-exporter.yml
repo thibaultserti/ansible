@@ -1,0 +1,8 @@
+---
+- name: Node-exporter
+  hosts: control
+  become: true
+  vars_files:
+    - "env_vars/node-exporter.yml"
+  roles:
+    - node-exporter

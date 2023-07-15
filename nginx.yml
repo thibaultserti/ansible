@@ -1,0 +1,37 @@
+---
+- name: Nginx
+  hosts: control
+  become: true
+  vars_files:
+    - "env_vars/nginx.yml"
+  pre_tasks:
+    - name: Fail if "dns_cloudflare_api_token" is undefined
+      ansible.builtin.fail: msg="Bailing out. This play requires 'dns_cloudflare_api_token'"
+      when: dns_cloudflare_api_token is undefined
+
+    - name: Install bottle python package
+      ansible.builtin.pip:
+        name: "{{ item }}"
+      loop:
+        - certbot
+        - certbot-dns-cloudflare
+
+    - name: Copy DNS CloudFlare API token
+      ansible.builtin.template:
+        src: "nginx/dns_cloudflare_api_token.ini"
+        dest: "{{ creds_path }}"
+        owner: root
+        group: root
+        mode: '0600'
+
+  roles:
+    - geerlingguy.nginx
+    - geerlingguy.certbot
+
+  post_tasks:
+    - name: Add option to reload Nginx when renewing certificate
+      ansible.builtin.lineinfile:
+        dest: /etc/letsencrypt/cli.ini
+        state: present
+        regexp: '^deploy-hook ='
+        line: 'deploy-hook = systemctl reload nginx'

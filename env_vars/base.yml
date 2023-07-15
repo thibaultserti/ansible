@@ -1,0 +1,8 @@
+---
+ansible_user: ansible
+admin_user: tibo
+
+packages:
+  - lm-sensors
+  - traceroute
+  - htop

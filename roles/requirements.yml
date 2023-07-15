@@ -1,0 +1,29 @@
+collections:
+  - name: community.general
+    version: 7.0.1
+
+roles:
+- name: node-exporter
+  src: cloudalchemy.node_exporter
+  version: 2.0.0
+- name: geerlingguy.nginx
+  src: geerlingguy.nginx
+  version: 3.1.4
+- name: geerlingguy.ansible
+  src: geerlingguy.ansible
+  version: 2.3.0
+- name: geerlingguy.certbot
+  src: geerlingguy.certbot
+  version: 5.0.2
+- name: geerlingguy.pip
+  src: geerlingguy.pip
+  version: 2.2.0
+- name: geerlingguy.docker
+  src: geerlingguy.docker
+  version: 6.1.0
+- name: geerlingguy.kubernetes
+  src: geerlingguy.kubernetes
+  version: 7.1.2
+- name: artis3n.tailscale
+  src: artis3n.tailscale
+  version: v4.2.2

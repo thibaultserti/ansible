@@ -1,0 +1,30 @@
+---
+- name: Kubernetes
+  hosts: belt
+  become: true
+  vars_files:
+    - "env_vars/kubernetes.yml"
+  roles:
+    - geerlingguy.kubernetes
+  post_tasks:
+    - name: Copy custom resolv.conf for pods
+      ansible.builtin.template:
+        src: "kubernetes/kubelet-custom-resolv.conf"
+        dest: "{{ resolvConf }}"
+        owner: "root"
+        group: "root"
+        mode: '0644'
+    - name: Copy extra args for kubelet
+      ansible.builtin.template:
+        src: "kubernetes/kubelet"
+        dest: "/etc/default/kubelet"
+        owner: "root"
+        group: "root"
+        mode: '0644'
+      notify:
+        - Restart kubelet
+  handlers:
+    - name: Restart kubelet
+      ansible.builtin.systemd:
+        state: restarted
+        name: kubelet

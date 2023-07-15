@@ -1,0 +1,57 @@
+---
+- name: Pihole
+  hosts: control
+  become: true
+  vars_files:
+  - "env_vars/pihole.yml"
+  pre_tasks:
+    - name: Create config
+      ansible.builtin.template:
+        src: "pihole/10-DNSStubListenerNo.conf"
+        dest: "/etc/systemd/resolved.conf.d/"
+        owner: "root"
+        group: "root"
+        mode: '0644'
+      notify:
+        - Restart systemd-resolved
+        - Restart systemd-networkd
+  tasks:
+    - name: Install docker-compose
+      ansible.builtin.pip:
+        name: docker-compose
+    - name: Create directory
+      ansible.builtin.file:
+        path: /opt/pihole
+        state: directory
+        owner: root
+        group: root
+        mode: '0644'
+    - name: Copy docker-compose.yaml
+      ansible.builtin.copy:
+        src: pihole/docker-compose.yaml
+        dest: /opt/pihole/docker-compose.yaml
+    - name: Run `docker-compose up`
+      community.docker.docker_compose:
+        project_src: /opt/pihole
+        build: false
+      register: output
+    - name: Create wildcard redirect
+      ansible.builtin.template:
+        src: pihole/02-my-wildcard-dns.conf
+        dest: /opt/pihole
+        owner: root
+        group: root
+        mode: '0644'
+    - name: Information
+      ansible.builtin.debug:
+        msg: Add a record on pihole Local DNS and delete it to reload dnsmask so that the wildcard zone is used
+
+  handlers:
+    - name: Restart systemd-resolved
+      ansible.builtin.systemd:
+        state: restarted
+        name: systemd-resolved
+    - name: Restart systemd-networkd
+      ansible.builtin.systemd:
+        state: restarted
+        name: systemd-networkd

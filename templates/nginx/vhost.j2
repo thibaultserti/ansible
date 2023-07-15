@@ -1,0 +1,87 @@
+{% block server_redirect %}
+{% if item.server_name_redirect is defined %}
+server {
+    listen       80;
+{% if nginx_listen_ipv6 %}
+    listen       [::]:80;
+{% endif %}
+    server_name  {{ item.server_name_redirect }};
+    return       301 https://$http_host$request_uri;
+}
+{% endif %}
+{% endblock %}
+
+
+server {
+    {% block server_begin %}{% endblock %}
+
+    {% block server_basic -%}
+    listen {{ item.listen | default('80') }};
+{% if nginx_listen_ipv6 %}
+    listen       [::]:{{item.listen | default('80') }};
+{% endif %}
+
+{% if item.server_name is defined %}
+    server_name {{ item.server_name }};
+{% endif %}
+
+{% if item.error_page is defined %}
+    error_page {{ item.error_page }};
+{% endif %}
+{% if item.access_log is defined %}
+    access_log {{ item.access_log }};
+{% endif %}
+{% if item.error_log is defined %}
+    error_log {{ item.error_log }} error;
+{% endif %}
+
+{% if item.return is defined %}
+    return {{ item.return }};
+{% endif %}
+
+
+{% for location in item.locations %}
+
+    location {{ location.path | default('/') }} {
+        proxy_pass {{ location.proxy_pass }};
+{% if location.default | default(true) %}
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $proxy_protocol_addr;
+        proxy_set_header X-Forwarded-For $proxy_protocol_addr;
+
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        proxy_buffering off;
+        proxy_request_buffering off;
+{% endif %}
+{% if location.redirect_path is defined %}
+        rewrite ^{{ location.path | default('/') }}$ $scheme://{{ item.server_name }}{{ location.redirect_path }} permanent;
+{% endif %}
+{% if location.extra_parameters is defined %}
+        {{ location.extra_parameters|indent(8) }}
+{% endif %}
+    }
+
+{% endfor %}
+
+    # required to avoid HTTP 411: see Issue #1486
+    # (https://github.com/docker/docker/issues/1486)
+    chunked_transfer_encoding on;
+
+    # add Strict-Transport-Security to prevent man in the middle attacks
+    add_header Strict-Transport-Security "max-age=31536000" always;
+
+{% if item.listen is defined and "443" in item.listen %}
+    ssl_certificate     /etc/letsencrypt/live/{{wildcard_domain}}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{wildcard_domain}}/privkey.pem;
+
+    ssl_protocols       TLSv1.2 TLSv1.3;
+    ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
+    ssl_prefer_server_ciphers on;
+    ssl_session_cache shared:SSL:10m;
+{% endif %}
+
+}
+    {% endblock %}
+
+    {% block server_end %}{% endblock %}
