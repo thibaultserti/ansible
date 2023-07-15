@@ -46,8 +46,8 @@ server {
         proxy_pass {{ location.proxy_pass }};
 {% if location.default | default(true) %}
         proxy_set_header Host $http_host;
-        proxy_set_header X-Real-IP $proxy_protocol_addr;
-        proxy_set_header X-Forwarded-For $proxy_protocol_addr;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_protocol;
 
         proxy_set_header X-Forwarded-Proto $scheme;
 
@@ -76,6 +76,7 @@ server {
     ssl_certificate_key /etc/letsencrypt/live/{{wildcard_domain}}/privkey.pem;
 
     ssl_protocols       TLSv1.2 TLSv1.3;
+
     ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
     ssl_prefer_server_ciphers on;
     ssl_session_cache shared:SSL:10m;
