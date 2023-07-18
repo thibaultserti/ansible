@@ -8,3 +8,5 @@ semaphore_port: 3000
 semaphore_admin_user: admin
 semaphore_admin_password: admin
 semaphore_admin_email: thibault.ayanides@free.fr
+
+semaphore_url: https://semaphore.ayanides.cloud
