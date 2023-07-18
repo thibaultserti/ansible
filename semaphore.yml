@@ -17,8 +17,6 @@
         owner: "{{ semaphore_user }}"
         group: "{{ semaphore_user }}"
         mode: '0644'
-      notify:
-        - Restart semaphore
 
 
     - name: Get admin user
@@ -54,9 +52,3 @@
 
   roles:
     - role: geerlingguy.ansible
-
-  handlers:
-    - name: Restart semaphore
-      ansible.builtin.systemd:
-        state: restarted
-        name: semaphore
