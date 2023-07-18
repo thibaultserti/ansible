@@ -33,7 +33,8 @@ kubernetes_config_cluster_configuration:
 kubernetes_config_kubelet_configuration:
   cgroupDriver: systemd
 
-kubernetes_config_kube_proxy_configuration: {}
+kubernetes_config_kube_proxy_configuration:
+  metricsBindAddress: 0.0.0.0:10249
 
 kubernetes_allow_pods_on_control_plane: true
 
