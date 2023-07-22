@@ -6,7 +6,16 @@ server {
     listen       [::]:80;
 {% endif %}
     server_name  {{ item.server_name_redirect }};
-    return       301 https://$http_host$request_uri;
+{% if item.server_name_redirect_exceptions is defined %}
+{% for location in item.server_name_redirect_exceptions %}
+    location {{ location.path }} {
+        proxy_pass {{ location.proxy_pass }};
+    }
+{% endfor %}
+{% endif %}
+    location / {
+        return       301 https://$http_host$request_uri;
+    }
 }
 {% endif %}
 {% endblock %}
