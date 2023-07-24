@@ -6,3 +6,4 @@ packages:
   - lm-sensors
   - traceroute
   - htop
+  - stress
