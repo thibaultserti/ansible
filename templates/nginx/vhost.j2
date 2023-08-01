@@ -37,8 +37,8 @@ server {
 {% if item.error_page is defined %}
     error_page {{ item.error_page }};
 {% endif %}
-{% if item.access_log is defined %}
-    access_log {{ item.access_log }};
+{% if item.server_name is defined %}
+    access_log /var/log/nginx/{{ item.server_name }}.log main;
 {% endif %}
 {% if item.error_log is defined %}
     error_log {{ item.error_log }} error;
