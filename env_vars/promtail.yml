@@ -4,11 +4,44 @@ promtail_config_server:
 promtail_config_clients:
   - url: "https://loki.ayanides.cloud/loki/api/v1/push"
 
+promtail_system_user: root
+
 promtail_config_scrape_configs:
   - job_name: system
     static_configs:
     - targets:
         - localhost
       labels:
-        job: varlogs
+        job: default/varlogs
+        node_name: eros
         __path__: /var/log/*log
+
+  - job_name: "docker"
+    docker_sd_configs:
+      - host: "unix:///var/run/docker.sock"
+        refresh_interval: "5s"
+    pipeline_stages:
+      - static_labels:
+          node_name: eros
+          job: default/docker
+    relabel_configs:
+    - regex: /(.*)
+      source_labels:
+      - __meta_docker_container_name
+      target_label: container
+
+  - job_name: systemd-journal
+    journal:
+      labels:
+        job: default/systemd-journal
+      path: /var/log/journal
+    relabel_configs:
+    - source_labels:
+      - __journal__systemd_unit
+      target_label: systemd_unit
+    - source_labels:
+      - __journal__hostname
+      target_label: node_name
+    - source_labels:
+      - __journal_syslog_identifier
+      target_label: syslog_identifier
