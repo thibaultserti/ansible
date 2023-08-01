@@ -1,0 +1,8 @@
+---
+- name: Promtail
+  hosts: control
+  become: true
+  vars_files:
+    - "env_vars/promtail.yml"
+  roles:
+    - patrickjahns.promtail
