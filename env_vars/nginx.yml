@@ -16,7 +16,8 @@ certbot_certs:
     - '*.ayanides.cloud'
 
 
-
+nginx_extra_conf_options: |
+  include /etc/nginx/modules-enabled/*;
 nginx_access_log: /var/log/nginx/access.log main
 nginx_log_format: |-
   escape=json '{'

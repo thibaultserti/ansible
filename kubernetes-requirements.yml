@@ -4,102 +4,101 @@
   vars_files:
     - "env_vars/kubernetes.yml"
   pre_tasks:
+    # DISABLE SWAP
+    - name: Check if swap is present
+      ansible.builtin.shell: |
+        swapon -s
+      register: swap
+      changed_when: false
 
-  # DISABLE SWAP
-  - name: Check if swap is present
-    ansible.builtin.shell: |
-      swapon -s
-    register: swap
-    changed_when: false
+    - name: Disable SWAP since kubernetes can't work with swap enabled (1/2)
+      ansible.builtin.shell: |
+        swapoff -a
+      when: swap.stdout != ""
 
-  - name: Disable SWAP since kubernetes can't work with swap enabled (1/2)
-    ansible.builtin.shell: |
-      swapoff -a
-    when: swap.stdout != ""
+    - name: Disable SWAP in fstab since kubernetes can't work with swap enabled (2/2)
+      ansible.builtin.replace:
+        path: /etc/fstab
+        regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+        replace: '# \1'
 
-  - name: Disable SWAP in fstab since kubernetes can't work with swap enabled (2/2)
-    ansible.builtin.replace:
-      path: /etc/fstab
-      regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
-      replace: '# \1'
+    # ENABLE KERNEL MODULES
+    - name: Copy modules
+      ansible.builtin.template:
+        src: "kubernetes/modules.conf"
+        dest: "/etc/modules-load.d/k8s.conf"
+        owner: "root"
+        group: "root"
+        mode: '0644'
 
-  # ENABLE KERNEL MODULES
-  - name: Copy modules
-    ansible.builtin.template:
-      src: "kubernetes/modules.conf"
-      dest: "/etc/modules-load.d/k8s.conf"
-      owner: "root"
-      group: "root"
-      mode: '0644'
+    - name: Add the modules and make sure it is loaded after reboot
+      community.general.modprobe:
+        name: "{{ item }}"
+        state: present
+        persistent: present
+      loop: "{{ modules }}"
 
-  - name: Add the modules and make sure it is loaded after reboot
-    community.general.modprobe:
-      name: "{{ item }}"
-      state: present
-      persistent: present
-    loop: "{{ modules }}"
+    # ENABLE SYSCTL PARAMS
+    - name: Copy sysctl params
+      ansible.builtin.template:
+        src: "kubernetes/sysctl.conf"
+        dest: "/etc/sysctl.d/k8s.conf"
+        owner: "root"
+        group: "root"
+        mode: '0644'
+      register: result
 
-  # ENABLE SYSCTL PARAMS
-  - name: Copy sysctl params
-    ansible.builtin.template:
-      src: "kubernetes/sysctl.conf"
-      dest: "/etc/sysctl.d/k8s.conf"
-      owner: "root"
-      group: "root"
-      mode: '0644'
-    register: result
+    - name: Apply sysctl config
+      ansible.builtin.shell: |
+        sysctl --system
+      when: result.changed
 
-  - name: Apply sysctl config
-    ansible.builtin.shell: |
-      sysctl --system
-    when: result.changed
+    # CONTAINERD
+    - name: Copy containerd configuration
+      ansible.builtin.template:
+        src: "kubernetes/containerd.toml"
+        dest: "/etc/containerd/config.toml"
+        owner: "root"
+        group: "root"
+        mode: '0644'
+      notify:
+        - Restart containerd
 
-  # CONTAINERD
-  - name: Copy containerd configuration
-    ansible.builtin.template:
-      src: "kubernetes/containerd.toml"
-      dest: "/etc/containerd/config.toml"
-      owner: "root"
-      group: "root"
-      mode: '0644'
-    notify:
-      - Restart containerd
+    # CRICTL
+    - name: Configure crictl
+      ansible.builtin.template:
+        src: "kubernetes/crictl.yaml"
+        dest: "/etc/crictl.yaml"
+        owner: "root"
+        group: "root"
+        mode: '0644'
 
-  # CRICTL
-  - name: Configure crictl
-    ansible.builtin.template:
-      src: "kubernetes/crictl.yaml"
-      dest: "/etc/crictl.yaml"
-      owner: "root"
-      group: "root"
-      mode: '0644'
+    # HELM
+    - name: Add Helm GPG key
+      ansible.builtin.apt_key:
+        url: https://baltocdn.com/helm/signing.asc
+        state: present
+      when: kubernetes_role == "control_plane"
 
-  # HELM
-  - name: Add Helm GPG key
-    ansible.builtin.apt_key:
-      url: https://baltocdn.com/helm/signing.asc
-      state: present
-    when: kubernetes_role == "control_plane"
+    - name: Add Helm repo
+      ansible.builtin.apt_repository:
+        repo: "deb https://baltocdn.com/helm/stable/debian/ all main"
+        state: present
+      when: kubernetes_role == "control_plane"
 
-  - name: Add Helm repo
-    ansible.builtin.apt_repository:
-      repo: "deb https://baltocdn.com/helm/stable/debian/ all main"
-      state: present
-    when: kubernetes_role == "control_plane"
+    - name: Install Helm
+      ansible.builtin.apt:
+        name: helm
+        state: present
+      when: kubernetes_role == "control_plane"
 
-  - name: Install Helm
-    ansible.builtin.apt:
-      name: helm
-      state: present
-    when: kubernetes_role == "control_plane"
-
-  # CILIUM CLI
-  - name: Install Cilium CLI
-    ansible.builtin.unarchive:
-      src: "https://github.com/cilium/cilium-cli/releases/download/{{ cilium_cli_version }}/cilium-linux-amd64.tar.gz"
-      dest: "/usr/local/bin"
-      copy: no
-    when: kubernetes_role == "control_plane"
+    # CILIUM CLI
+    - name: Install Cilium CLI
+      ansible.builtin.unarchive:
+        src: "https://github.com/cilium/cilium-cli/releases/download/{{ cilium_cli_version }}/cilium-linux-amd64.tar.gz"
+        dest: "/usr/local/bin"
+        copy: false
+      when: kubernetes_role == "control_plane"
 
   roles:
     - geerlingguy.docker

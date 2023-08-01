@@ -3,7 +3,7 @@
   hosts: control
   become: true
   vars_files:
-  - "env_vars/pihole.yml"
+    - "env_vars/pihole.yml"
   pre_tasks:
     - name: Create config
       ansible.builtin.template:
@@ -30,6 +30,9 @@
       ansible.builtin.copy:
         src: pihole/docker-compose.yaml
         dest: /opt/pihole/docker-compose.yaml
+        mode: '0644'
+        owner: root
+        group: root
     - name: Run `docker-compose up`
       community.docker.docker_compose:
         project_src: /opt/pihole

@@ -34,19 +34,19 @@
       ansible.builtin.user:
         name: "{{ ansible_user }}"
         groups: wheel
-        append: yes
+        append: true
 
     - name: Add admin user to wheel group
       ansible.builtin.user:
         name: "{{ admin_user }}"
         groups: wheel
-        append: yes
+        append: true
 
     - name: Set authorized key taken from file
       ansible.posix.authorized_key:
         user: "{{ ansible_user }}"
         state: present
-        key: "{{ lookup('file', lookup('env','PWD') + '/keys/ansible.pub') }}"
+        key: "{{ lookup('file', lookup('env', 'PWD') + '/keys/ansible.pub') }}"
 
     - name: Install base packages
       ansible.builtin.apt:
