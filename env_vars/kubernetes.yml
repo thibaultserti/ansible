@@ -42,6 +42,7 @@ kubernetes_config_cluster_configuration:
 
 kubernetes_config_kubelet_configuration:
   cgroupDriver: systemd
+  serverTLSBootstrap: true
 
 kubernetes_config_kube_proxy_configuration:
   metricsBindAddress: 0.0.0.0:10249
