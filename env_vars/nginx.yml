@@ -97,7 +97,19 @@ nginx_vhosts:
       - proxy_pass: http://127.0.0.1:8000
         redirect_path: /admin
 
-# BELT
+# TELEPORT
+  - server_name: "belt.ayanides.cloud"
+    server_name_redirect: "belt.ayanides.cloud"
+    listen: 443 ssl http2
+    locations:
+      - proxy_pass: https://192.168.1.101 # Teleport LB IP
+        extra_parameters: |
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "upgrade";
+
+
+# TRAEFIK
   - server_name: "*.ayanides.cloud"
     server_name_redirect: "*.ayanides.cloud"
     listen: 443 ssl http2
