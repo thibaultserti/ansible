@@ -53,5 +53,11 @@
         name: "{{ packages }}"
         state: present
 
+    - name: Configure inotify kernel param
+      ansible.posix.sysctl:
+        name: fs.inotify.max_user_instances
+        value: '256'
+        state: present
+
   roles:
     - geerlingguy.pip
