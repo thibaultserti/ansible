@@ -108,6 +108,29 @@ nginx_vhosts:
           proxy_set_header Upgrade $http_upgrade;
           proxy_set_header Connection "upgrade";
 
+# ROUTER
+  - server_name: "router.ayanides.cloud"
+    server_name_redirect: "router.ayanides.cloud"
+    listen: 443 ssl http2
+    locations:
+      - proxy_pass: http://192.168.1.1
+        extra_parameters: |
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "upgrade";
+          proxy_set_header Referer http://192.168.1.1;
+
+# BOX
+  - server_name: "box.ayanides.cloud"
+    server_name_redirect: "box.ayanides.cloud"
+    listen: 443 ssl http2
+    locations:
+      - proxy_pass: http://192.168.0.1
+        extra_parameters: |
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "upgrade";
+          proxy_set_header Referer http://192.168.0.1;
 
 # TRAEFIK
   - server_name: "*.ayanides.cloud"
