@@ -5,6 +5,9 @@ server {
 {% if nginx_listen_ipv6 %}
     listen       [::]:80;
 {% endif %}
+{% if item.public is defined and item.public %}
+    listen       8888;
+{% endif %}
     server_name  {{ item.server_name_redirect }};
 {% if item.server_name_redirect_exceptions is defined %}
 {% for location in item.server_name_redirect_exceptions %}
@@ -27,7 +30,10 @@ server {
     {% block server_basic -%}
     listen {{ item.listen | default('80') }};
 {% if nginx_listen_ipv6 %}
-    listen       [::]:{{item.listen | default('80') }};
+    listen [::]:{{item.listen | default('80') }};
+{% endif %}
+{% if item.public is defined and item.public %}
+    listen  4443 ssl http2;
 {% endif %}
 
 {% if item.server_name is defined %}
@@ -38,7 +44,7 @@ server {
     error_page {{ item.error_page }};
 {% endif %}
 {% if item.server_name is defined %}
-    access_log /var/log/nginx/{{ item.server_name }}.log main;
+    access_log /var/log/nginx/{{ item.server_name if item.server_name != '_' else "default" }}.log main;
 {% endif %}
 {% if item.error_log is defined %}
     error_log {{ item.error_log }} error;

@@ -71,6 +71,16 @@
       notify:
         - Reload nginx
 
+    - name: Copy default host conf
+      ansible.builtin.template:
+        src: "nginx/default.j2"
+        dest: "/etc/nginx/conf.d/0000default.conf"
+        owner: root
+        group: root
+        mode: '0644'
+      notify:
+        - Reload nginx
+
   handlers:
     - name: Reload nginx
       ansible.builtin.systemd:
