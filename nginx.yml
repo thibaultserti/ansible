@@ -14,7 +14,6 @@
       ansible.builtin.pip:
         name: "{{ item }}"
       loop:
-        - certbot
         - certbot-dns-cloudflare
 
     - name: Copy DNS CloudFlare API token
