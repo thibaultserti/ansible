@@ -11,10 +11,9 @@
       when: dns_cloudflare_api_token is undefined
 
     - name: Install bottle python package
-      ansible.builtin.pip:
-        name: "{{ item }}"
-      loop:
-        - certbot-dns-cloudflare
+      community.general.snap:
+        name:
+          - certbot-dns-cloudflare
 
     - name: Copy DNS CloudFlare API token
       ansible.builtin.template:
