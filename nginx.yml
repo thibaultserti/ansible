@@ -23,29 +23,49 @@
         group: root
         mode: '0600'
 
-    - name: Install geoip package
-      ansible.builtin.apt:
-        name:
-          - libnginx-mod-http-geoip
-          - geoip-database
+    # - name: Install geoip package
+    #   ansible.builtin.apt:
+    #     name:
+    #       - libnginx-mod-http-geoip
+    #       - geoip-database
+    #     state: present
+
+    # - name: Create directory GeoIp
+    #   ansible.builtin.file:
+    #     path: /usr/share/GeoIP
+    #     state: directory
+    #     owner: root
+    #     group: root
+    #     mode: '0644'
+
+    # - name: Copy GeoIp
+    #   ansible.builtin.copy:
+    #     src: nginx/GeoIP.dat
+    #     dest: /usr/share/GeoIP/GeoIP.dat
+    #     mode: '0644'
+    #     owner: root
+    #     group: root
+
+    # Configure Nginx upstream repo
+    - name: Get Nginx key
+      ansible.builtin.get_url:
+        url: https://nginx.org/keys/nginx_signing.key
+        dest: /etc/apt/keyrings/nginx.asc
+        mode: '0644'
+
+    - name: Install Nginx upstream repo
+      ansible.builtin.apt_repository:
+        # mainline repo
+        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/nginx.asc] http://nginx.org/packages/mainline/ubuntu {{ ansible_distribution_release }} nginx"
         state: present
 
-    - name: Create directory GeoIp
-      ansible.builtin.file:
-        path: /usr/share/GeoIP
-        state: directory
-        owner: root
-        group: root
-        mode: '0644'
-
-    - name: Copy GeoIp
+    - name: Set preference for Nginx upstream repo over distribution repository
       ansible.builtin.copy:
-        src: nginx/GeoIP.dat
-        dest: /usr/share/GeoIP/GeoIP.dat
+        src: nginx/preferences_apt
+        dest: /etc/apt/preferences.d/99nginx
         mode: '0644'
         owner: root
         group: root
-
 
   roles:
     - geerlingguy.nginx
