@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  nginx:
+    build: .
+    restart: unless-stopped
+    volumes:
+      - {{nginx_data_dir}}/nginx.conf:{{nginx_conf_file_path}}
+      - ./{{nginx_data_subpath}}/conf.d:{{nginx_conf_path}}
+      - ./{{nginx_data_subpath}}/sites-enabled:{{nginx_vhost_path}}
+      - ./{{nginx_data_subpath}}/modules-enabled:{{nginx_module_path}}
+      - ./{{nginx_data_subpath}}/log:/var/log/nginx
+      - ./{{certbot_data_subpath}}/conf:/etc/letsencrypt
+      - ./{{certbot_data_subpath}}/www:/var/www/certbot
+    ports:
+      - "80:80"     # private
+      - "443:443"   # private
+      - "8888:8888" # public
+      - "4443:4443" # public
+      - "8080:8080" # metrics
+
+  certbot:
+    image: certbot/dns-cloudflare:{{certbot_image_tag}}
+    volumes:
+      - ./{{certbot_data_subpath}}/conf:/etc/letsencrypt
+      - ./{{certbot_data_subpath}}/log:/var/log/letsencrypt
+      - ./{{certbot_data_subpath}}/www:/var/www/certbot
+      - ./{{certbot_data_subpath}}/cloudflare:/var/www/cloudflare
+    command: {{ certbot_create_command }}

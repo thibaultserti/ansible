@@ -18,8 +18,8 @@ server {
     # add Strict-Transport-Security to prevent man in the middle attacks
     add_header Strict-Transport-Security "max-age=31536000" always;
 
-    ssl_certificate     /etc/letsencrypt/live/ayanides.cloud/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/ayanides.cloud/privkey.pem;
+    ssl_certificate     /etc/letsencrypt/live/{{wildcard_domain}}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{wildcard_domain}}/privkey.pem;
 
     ssl_protocols       TLSv1.2 TLSv1.3;
 
