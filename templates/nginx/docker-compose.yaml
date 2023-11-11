@@ -18,6 +18,8 @@ services:
       - "8888:8888" # public
       - "4443:4443" # public
       - "8080:8080" # metrics
+    networks:
+      - otel_collector
 
   certbot:
     image: certbot/dns-cloudflare:{{certbot_image_tag}}
@@ -27,3 +29,8 @@ services:
       - ./{{certbot_data_subpath}}/www:/var/www/certbot
       - ./{{certbot_data_subpath}}/cloudflare:/var/www/cloudflare
     command: {{ certbot_create_command }}
+
+networks:
+  otel_collector:
+    external: true
+    name: otel-collector

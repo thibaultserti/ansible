@@ -2,7 +2,7 @@ promtail_config_server:
   http_listen_port: 9080
   grpc_listen_port: 9081
 promtail_config_clients:
-  - url: "https://otel.ayanides.cloud/loki/api/v1/push"
+  - url: "https://loki.otel.ayanides.cloud/loki/api/v1/push"
     tls_config:
       insecure_skip_verify: true
 

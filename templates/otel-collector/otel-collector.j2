@@ -1,0 +1,15 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+exporters:
+  otlphttp:
+    endpoint: {{ otlphttp_endpoint }}
+    tls:
+      insecure_skip_verify: true
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [otlphttp]

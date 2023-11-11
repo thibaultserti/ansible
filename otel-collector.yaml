@@ -1,0 +1,25 @@
+---
+- name: Opentelemetry collector
+  hosts: control
+  become: true
+  vars_files:
+    - "env_vars/otel-collector.yml"
+  tasks:
+
+    - name: Create a network
+      community.docker.docker_network:
+        name: otel-collector
+
+    - name: Ensure otel-collector exists.
+      ansible.builtin.file:
+        path: "{{ otel_collector_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Copy docker-compose.yaml
+      ansible.builtin.template:
+        src: otel-collector/docker-compose.yaml
+        dest: "{{ otel_collector_dir }}/docker-compose.yaml"
+        mode: '0644'
+        owner: root
+        group: root
