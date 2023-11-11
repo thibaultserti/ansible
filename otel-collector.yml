@@ -23,3 +23,8 @@
         mode: '0644'
         owner: root
         group: root
+
+    - name: Run `docker-compose up`
+      community.docker.docker_compose:
+        project_src: "{{ otel_collector_dir }}"
+        build: false

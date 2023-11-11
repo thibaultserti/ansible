@@ -1,4 +1,4 @@
-otel_collector_image_tag: latest
+otel_collector_image_tag: 0.88.0
 
 otel_collector_dir: /opt/otel-collector
 otlphttp_endpoint: https://otlp-http.otel.ayanides.cloud:443
