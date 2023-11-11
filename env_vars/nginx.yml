@@ -108,12 +108,12 @@ nginx_modules:
     conf: |
       NginxModuleEnabled ON;
       NginxModuleOtelSpanExporter otlp;
-      NginxModuleOtelExporterEndpoint otlp-grpc.otel.ayanides.cloud:443;
+      NginxModuleOtelExporterEndpoint collector:4317;
       NginxModuleServiceName nginx;
       NginxModuleServiceNamespace default;
       NginxModuleServiceInstanceId eros;
       NginxModuleResolveBackends ON;
-      NginxModuleTraceAsError ON;
+      NginxModuleTraceAsError Off;
 
 
 nginx_vhosts:
