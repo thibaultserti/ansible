@@ -23,4 +23,4 @@ roles:
   version: v4.2.2
 - name: patrickjahns.promtail
   src: patrickjahns.promtail
-  version: 1.24.1
+  version: 1.26.0
