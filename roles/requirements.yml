@@ -1,6 +1,6 @@
 collections:
   - name: community.general
-    version: 7.5.1
+    version: 7.5.2
 
 roles:
 - name: node-exporter
