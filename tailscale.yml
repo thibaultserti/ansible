@@ -9,7 +9,19 @@
       ansible.builtin.debug:
         msg: System {{ tailscale_authkey }}
       when: tailscale_authkey is defined
+    - name: Packet forwarding
+      ansible.posix.sysctl:
+        name: net.ipv4.ip_forward
+        value: '0'
+        state: present
+      when: is_exit_node
+    - name: Packet forwarding
+      ansible.posix.sysctl:
+        name: net.ipv6.conf.all.forwarding
+        value: '0'
+        state: present
+      when: is_exit_node
   roles:
     - role: artis3n.tailscale
       vars:
-        tailscale_args: "--ssh {{ '--accept-dns=false' if is_dns else '' }}"
+        tailscale_args: "--ssh {{ '--advertise-exit-node=true' if is_exit_node else ''}} {{ '--accept-dns=false' if is_dns else '' }}"
