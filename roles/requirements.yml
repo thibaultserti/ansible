@@ -12,7 +12,7 @@ roles:
   version: 2.2.0
 - name: geerlingguy.docker
   src: geerlingguy.docker
-  version: 6.2.0
+  version: 7.1.0
 - name: geerlingguy.kubernetes
   src: geerlingguy.kubernetes
   version: 8.0.0
