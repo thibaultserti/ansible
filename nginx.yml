@@ -118,3 +118,14 @@
       community.docker.docker_compose:
         project_src: "{{ nginx_base_dir }}"
         build: false
+
+# RESTART DOCKER-COMPOSE EVERY WEEK
+    - name: Créer le fichier de tâche cron pour Docker-compose
+      ansible.builtin.cron:
+        name: "Restart Docker-compose"
+        minute: "0"
+        hour: "0"
+        weekday: "0"
+        user: "root"
+        job: "cd {{ nginx_base_dir }} && docker-compose restart"
+        cron_file: "docker_compose_restart"
