@@ -33,7 +33,7 @@ server {
     listen [::]:{{item.listen | default('80') }};
 {% endif %}
 {% if item.public is defined and item.public %}
-    listen  4443 ssl http2;
+    listen 4443 ssl http2;
 {% endif %}
 
 {% if item.server_name is defined %}
