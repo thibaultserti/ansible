@@ -33,4 +33,4 @@ services:
 networks:
   otel_collector:
     external: true
-    name: otel-collector
+    name: otel_collector

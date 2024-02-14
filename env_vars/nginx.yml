@@ -1,5 +1,5 @@
 ---
-email: "thibault.ayanides@free.fr"
+email: "admin@ayanides.cloud"
 
 nginx_base_dir: /opt/nginx
 nginx_data_subpath: data/nginx
