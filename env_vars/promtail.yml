@@ -25,7 +25,7 @@ promtail_config_scrape_configs:
       labels:
         job: default/nginx
         node_name: eros
-        __path__: /var/log/nginx/*log
+        __path__: /opt/nginx/data/nginx/log/*log
 
   - job_name: docker
     docker_sd_configs:
@@ -46,6 +46,18 @@ promtail_config_scrape_configs:
       labels:
         job: default/systemd-journal
       path: /var/log/journal
+      json: false
+    pipeline_stages:
+    - match:
+        selector: '{unit=~"session-\\d+\\.scope"}'
+        stages:
+        - drop:
+            expression: .*
+    - match:
+        selector: '{unit=~"someservice@.*service"}'
+        stages:
+        - drop:
+            expression: .*
     relabel_configs:
     - source_labels:
       - __journal__systemd_unit
