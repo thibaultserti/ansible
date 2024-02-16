@@ -4,13 +4,13 @@
   become: true
   tasks:
   - name: Update all installed packages using APT module
-    apt:
+    ansible.builtin.apt:
       name: '*'
       state: latest
-      update_cache: yes
-      only_upgrade: yes
+      update_cache: true
+      only_upgrade: true
     register: apt_update_status
 
   - name: Remove packages not needed anymore
-    apt:
-      autoremove: yes
+    ansible.buitlin.apt:
+      autoremove: true

@@ -74,16 +74,13 @@
         mode: '0644'
 
     # HELM
-    - name: Add Helm GPG key
-      ansible.builtin.get_url:
-        url: https://baltocdn.com/helm/signing.asc
-        dest: /etc/apt/keyrings/helm.asc
-        mode: '0644'
-      when: kubernetes_role == "control_plane"
+    - name: Download Kubernetes archive keyring
+      ansible.builtin.command:
+        cmd: curl -fsSL  https://baltocdn.com/helm/signing.asc | gpg --dearmor -o /usr/share/keyrings/helm.gpg
 
-    - name: Install Nginx upstream repo
+    - name: Install Helm upstream repo
       ansible.builtin.apt_repository:
-        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/helm.asc] https://baltocdn.com/helm/stable/debian/ all main"
+        repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/helm.asc] https://baltocdn.com/helm/stable/debian/ all main"
         state: present
       when: kubernetes_role == "control_plane"
 

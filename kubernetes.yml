@@ -32,8 +32,14 @@
         mode: '0644'
       when: kubernetes_role == "control_plane"
 
+    - name: Download Kubernetes archive keyring
+      ansible.builtin.command:
+        cmd: curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o {{ kubernetes_keyring_gpg_path }}
+
   roles:
     - geerlingguy.kubernetes
+
+
   post_tasks:
     - name: Copy custom resolv.conf for pods
       ansible.builtin.template:
