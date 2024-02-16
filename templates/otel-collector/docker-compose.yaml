@@ -2,7 +2,7 @@ version: '3'
 
 services:
   collector:
-
+    restart: unless-stopped
     image: otel/opentelemetry-collector:{{ otel_collector_image_tag }}
     command: ['--config=/etc/otel-collector-config.yaml']
     volumes:
