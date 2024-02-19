@@ -12,5 +12,5 @@
     register: apt_update_status
 
   - name: Remove packages not needed anymore
-    ansible.buitlin.apt:
+    ansible.builtin.apt:
       autoremove: true
