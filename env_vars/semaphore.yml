@@ -2,7 +2,7 @@
 
 #ansible_install_method: package
 
-semaphore_version: 2.8.90
+semaphore_version: 2.9.45
 semaphore_home: /opt/ansible
 semaphore_user: ansible
 semaphore_config_file: config.json
