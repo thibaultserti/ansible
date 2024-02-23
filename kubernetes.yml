@@ -32,13 +32,19 @@
         mode: '0644'
       when: kubernetes_role == "control_plane"
 
+
+    - name: Get stats of a file
+      ansible.builtin.stat:
+        path: /etc/foo.conf
+      register: st
+      when:
+
     - name: Download Kubernetes archive keyring
-      ansible.builtin.command:
-        cmd: curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o {{ kubernetes_keyring_gpg_path }}
+      ansible.builtin.shell:
+        cmd: "curl -fsSL https://pkgs.k8s.io/core:/stable:/v{{ kubernetes_version }}/deb/Release.key | gpg --yes --dearmor -o {{ kubernetes_keyring_gpg_path }}"
 
   roles:
     - geerlingguy.kubernetes
-
 
   post_tasks:
     - name: Copy custom resolv.conf for pods

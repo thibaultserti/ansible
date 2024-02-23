@@ -75,8 +75,8 @@
 
     # HELM
     - name: Download Kubernetes archive keyring
-      ansible.builtin.command:
-        cmd: curl -fsSL  https://baltocdn.com/helm/signing.asc | gpg --dearmor -o /usr/share/keyrings/helm.gpg
+      ansible.builtin.shell:
+        cmd: curl -fsSL  https://baltocdn.com/helm/signing.asc | gpg --yes --dearmor -o /usr/share/keyrings/helm.gpg
 
     - name: Install Helm upstream repo
       ansible.builtin.apt_repository:

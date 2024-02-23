@@ -69,8 +69,7 @@ kubernetes_pod_network:
   cni: ''
 
 kubernetes_keyring_gpg_path: /usr/share/keyrings/kubernetes-archive-keyring.gpg
-kubernetes_apt_release_channel: main
-kubernetes_apt_repository: "deb [signed-by={{ kubernetes_keyring_gpg_path }}] http://apt.kubernetes.io/ kubernetes-xenial {{ kubernetes_apt_release_channel }}"
+kubernetes_apt_repository: "deb [signed-by={{ kubernetes_keyring_gpg_path }}] https://pkgs.k8s.io/core:/stable:/v{{ kubernetes_version }}/deb/ /"
 kubernetes_apt_ignore_key_error: false
 
 cilium_cli_version: v0.14.7
