@@ -59,5 +59,21 @@
         value: '256'
         state: present
 
+    - name: Copy webhook script
+      ansible.builtin.copy:
+        content: |
+          #!/bin/bash
+          HOSTNAME=$(hostname)
+          curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"$HOSTNAME has just restarted\"}" {{ webhook_url }}
+        dest: /usr/local/bin/discord_message.sh
+        mode: '0755'
+      failed_when: webhook_url is not defined
+
+    - name: Configure alerting when server reboots
+      ansible.builtin.cron:
+        name: "alert when reboot"
+        special_time: reboot
+        job: "/usr/local/bin/discord_message.sh"
+
   roles:
     - geerlingguy.pip
