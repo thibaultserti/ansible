@@ -1,6 +1,6 @@
 ---
 - name: Upgrade
-  hosts: control
+  hosts: noncluster
   become: true
   tasks:
     - name: Add cronjob to reboot

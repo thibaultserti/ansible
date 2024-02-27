@@ -1,2 +1,3 @@
 is_dns: true
 is_exit_node: true
+is_rpi_nano: false

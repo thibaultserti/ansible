@@ -1,6 +1,6 @@
 ---
 - name: Node-exporter
-  hosts: control
+  hosts: noncluster
   become: true
   vars_files:
     - "env_vars/node-exporter.yml"
