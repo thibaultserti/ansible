@@ -3,14 +3,14 @@
   hosts: all
   become: true
   tasks:
-  - name: Update all installed packages using APT module
-    ansible.builtin.apt:
-      name: '*'
-      state: latest
-      update_cache: true
-      only_upgrade: true
-    register: apt_update_status
+    - name: Update all installed packages using APT module
+      ansible.builtin.apt:
+        name: '*'
+        state: latest
+        update_cache: true
+        only_upgrade: true
+      register: apt_update_status
 
-  - name: Remove packages not needed anymore
-    ansible.builtn.apt:
-      autoremove: true
+    - name: Remove packages not needed anymore
+      ansible.builtin.apt:
+        autoremove: true
