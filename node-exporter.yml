@@ -5,4 +5,4 @@
   vars_files:
     - "env_vars/node-exporter.yml"
   roles:
-    - node-exporter
+    - prometheus.prometheus.node_exporter
