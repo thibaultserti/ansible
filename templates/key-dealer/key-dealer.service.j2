@@ -1,0 +1,19 @@
+[Unit]
+Description=Key Dealer
+Documentation=https://github.com/thibaultserti/key-dealer
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User={{ user }}
+Group={{ user }}
+WorkingDirectory={{ home }}
+ExecReload=/bin/kill -HUP $MAINPID
+Environment="GOOGLE_APPLICATION_CREDENTIALS={{ home }}/credentials.json"
+ExecStart={{ home }}/key-dealer
+SyslogIdentifier=key-dealer
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

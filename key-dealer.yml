@@ -1,0 +1,89 @@
+---
+- name: Key Dealer
+  hosts: nano
+  become: true
+  vars_files:
+    - "env_vars/key-dealer.yml"
+  tasks:
+    - name: Create user key-dealer
+      ansible.builtin.user:
+        name: "{{ user }}"
+        state: present
+        home: "{{ home }}"
+
+    - name: Download binary
+      ansible.builtin.get_url:
+        url: https://github.com/thibaultserti/key-dealer/releases/download/{{ version }}/key-dealer_Linux_arm64.tar.gz
+        dest: /tmp/key-dealer.tar.gz
+        mode: "0644"
+
+    - name: Unarchive binary
+      ansible.builtin.unarchive:
+        remote_src: true
+        src: /tmp/key-dealer.tar.gz
+        dest: "{{ home }}"
+        mode: "0755"
+        owner: "{{ user }}"
+      notify:
+        - Restart key-dealer
+
+    - name: Create keys folder
+      ansible.builtin.file:
+        path: "{{ home }}/keys"
+        state: directory
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: "0750"
+
+    - name: Create conf folder
+      ansible.builtin.file:
+        path: "{{ home }}/config"
+        state: directory
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: "0755"
+
+
+    - name: Create configuration
+      ansible.builtin.template:
+        src: key-dealer/key-dealer.yaml.j2
+        dest: "{{ home }}/config/configuration.yaml"
+        mode: "0644"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+
+
+    - name: Create systemd key-dealer
+      ansible.builtin.template:
+        src: key-dealer/key-dealer.service.j2
+        dest: /etc/systemd/system/key-dealer.service
+        mode: "0644"
+      notify:
+        - Reload systemd daemon
+
+    - name: Enable key-dealer
+      ansible.builtin.systemd:
+        name: key-dealer
+        state: started
+        enabled: true
+        daemon_reload: true
+
+    - name: Start key-dealer
+      ansible.builtin.systemd:
+        name: key-dealer
+        state: started
+
+    - name: Create the credentials.json manually
+      ansible.builtin.debug:
+        msg: "**CAUTION** : You need to put the credentials.json manually on the server"
+
+  handlers:
+    - name: Reload systemd daemon
+      ansible.builtin.systemd:
+        name: key-dealer
+        daemon_reload: true
+
+    - name: Restart key-dealer
+      ansible.builtin.systemd:
+        name: key-dealer
+        state: restarted

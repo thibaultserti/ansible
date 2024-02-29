@@ -1,5 +1,5 @@
 ---
-- name: Upgrade
+- name: Cronjob
   hosts: noncluster
   become: true
   tasks:
