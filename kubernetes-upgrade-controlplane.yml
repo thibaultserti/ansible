@@ -1,0 +1,112 @@
+---
+# Warning : only works if there is one controlplane only
+- name: Upgrade kubernetes controlplane
+  hosts: controlplane
+  serial: 1
+  become: true
+  vars_files:
+    - "env_vars/kubernetes.yml"
+  tasks:
+
+    - name: Unhold packages
+      block:
+        - name: Kubeadm
+          ansible.builtin.dpkg_selections:
+            name: kubeadm
+            selection: install # equals unhold
+
+    - name: Upgrade and install
+      ansible.builtin.apt:
+        pkg:
+          - kubeadm={{ kube_version }}
+
+    - name: Hold packages
+      block:
+        - name: Kubeadm
+          ansible.builtin.dpkg_selections:
+            name: kubeadm
+            selection: hold
+
+    - name: Apply upgrade
+      ansible.builtin.shell:
+        cmd: "kubeadm upgrade apply -y"
+
+    - name: Drain node
+      ansible.builtin.shell:
+        cmd: |
+          kubectl drain {{ inventory_hostname_short }} \
+          --ignore-daemonsets \
+          --disable-eviction \
+          --delete-emptydir-data \
+          --grace-period={{ drainGracePeriod }} \
+          --timeout={{ drainTimeOut }} \
+          --kubeconfig /etc/kubernetes/admin.conf
+      ignore_errors: true
+
+    - name: Wait
+      ansible.builtin.pause:
+        prompt: Pausing after drain. (press ctrl+c and a to continue immediately)
+        seconds: "{{ pauseDelayCordon }}"
+
+    - name: Unhold packages
+      block:
+        - name: Kubelet
+          ansible.builtin.dpkg_selections:
+            name: kubelet
+            selection: install # equals unhold
+
+        - name: Kubectl
+          ansible.builtin.dpkg_selections:
+            name: kubectl
+            selection: install # equals unhold
+
+    - name: Upgrade and install
+      ansible.builtin.apt:
+        pkg:
+          - kubelet={{ kube_version }}
+          - kubectl={{ kube_version }}
+
+    - name: Hold packages
+      block:
+        - name: Kubelet
+          ansible.builtin.dpkg_selections:
+            name: kubelet
+            selection: hold
+
+        - name: Kubectl
+          ansible.builtin.dpkg_selections:
+            name: kubectl
+            selection: hold
+
+    - name: Reload services
+      block:
+        - name: Reload systemd daemon
+          ansible.builtin.systemd_service:
+            daemon_reload: true
+
+        - name: Restart kubelet
+          ansible.builtin.systemd_service:
+            enabled: true
+            state: restarted
+            name: kubelet
+
+    - name: Wait for kubelet to be running
+      ansible.builtin.systemd_service:
+        name: kubelet
+        state: started
+      register: kubeletDetails
+      until: kubeletDetails.status.ActiveState == 'active'
+      retries: 20
+      delay: 15
+
+    - name: Uncordon node
+      ansible.builtin.shell:
+        cmd: kubectl uncordon {{ inventory_hostname_short }} --kubeconfig /etc/kubernetes/admin.conf
+      retries: 20
+      delay: 15
+      ignore_errors: true
+
+    - name: Wait uncordon
+      ansible.builtin.pause:
+        prompt: Pausing after uncordon. (press ctrl+c and a to continue immediately)
+        seconds: "{{ pauseDelayUncordon }}"
