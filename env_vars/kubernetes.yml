@@ -19,7 +19,7 @@ kubernetes_packages:
   - name: kubernetes-cni
     state: present
 
-kubernetes_version: '1.28'
+kubernetes_version: '1.29'
 
 kubernetes_kubeadm_kubelet_config_file_path: '/etc/kubernetes/kubeadm-kubelet-config.yaml'
 
@@ -77,10 +77,11 @@ cilium_cli_version: v0.14.7
 
 # Upgrade
 
-kube_version: '1.28.7-1.1'
+kube_version: '1.29.2-1.1'
+kube_version_semver: 'v1.29.2'
 drainGracePeriod: 30
 # time until the drain command times out
-drainTimeOut: 120s
+drainTimeOut: 600s
 # time to wait in seconds inbetween upgrade operations
 pauseDelayCordon: 5
 pauseDelayUncordon: 5

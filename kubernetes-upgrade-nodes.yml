@@ -1,6 +1,6 @@
 ---
 - name: Upgrade kubernetes nodes
-  hosts: ceres
+  hosts: dataplane
   serial: 1
   become: true
   vars_files:
