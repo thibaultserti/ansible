@@ -2,7 +2,7 @@ collections:
   - name: community.general
     version: 7.5.5
   - name: prometheus.prometheus
-    version: 0.14.2
+    version: 0.15.0
 roles:
 - name: geerlingguy.ansible
   src: geerlingguy.ansible
