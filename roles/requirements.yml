@@ -9,7 +9,7 @@ roles:
   version: 2.3.0
 - name: geerlingguy.pip
   src: geerlingguy.pip
-  version: 2.2.0
+  version: 3.0.3
 - name: geerlingguy.docker
   src: geerlingguy.docker
   version: 7.1.0
