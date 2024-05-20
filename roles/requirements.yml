@@ -1,6 +1,6 @@
 collections:
   - name: community.general
-    version: 8.6.0
+    version: 8.6.1
   - name: prometheus.prometheus
     version: 0.16.3
 roles:
