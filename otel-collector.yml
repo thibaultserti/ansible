@@ -16,6 +16,16 @@
         state: directory
         mode: '0755'
 
+    - name: Copy conf
+      ansible.builtin.template:
+        src: "otel-collector/otel-collector.j2"
+        dest: "{{ otel_collector_dir }}/otel-collector-config.yaml"
+        owner: root
+        group: root
+        mode: '0644'
+      notify:
+        - Restart docker-compose
+
     - name: Copy docker-compose.yaml
       ansible.builtin.template:
         src: otel-collector/docker-compose.yaml
@@ -28,3 +38,9 @@
       community.docker.docker_compose:
         project_src: "{{ otel_collector_dir }}"
         build: false
+
+  handlers:
+    - name: Restart docker-compose
+      community.docker.docker_compose:
+        project_src: "{{ otel_collector_dir }}"
+        restarted: true

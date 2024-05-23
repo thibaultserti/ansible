@@ -20,6 +20,8 @@
         owner: root
         group: root
         mode: '0644'
+      notify:
+        - Restart docker-compose
 
 # CONF.D
     - name: Ensure nginx_conf.d exists.
@@ -35,6 +37,8 @@
         owner: root
         group: root
         mode: '0644'
+      notify:
+        - Restart docker-compose
 
     - name: Copy default host conf
       ansible.builtin.template:
@@ -43,6 +47,8 @@
         owner: root
         group: root
         mode: '0644'
+      notify:
+        - Restart docker-compose
 
     - name: Add modules
       ansible.builtin.template:
@@ -54,6 +60,8 @@
         mode: '0644'
       when: item.state | default('present') != 'absent'
       with_items: "{{ nginx_modules }}"
+      notify:
+        - Restart docker-compose
 
     - name: Add modules conf
       ansible.builtin.template:
@@ -65,6 +73,8 @@
         mode: '0644'
       when: item.state | default('present') != 'absent'
       with_items: "{{ nginx_modules }}"
+      notify:
+        - Restart docker-compose
 
 # VHOSTS
     - name: Ensure sites-enabled exists.
@@ -83,7 +93,8 @@
         mode: '0644'
       when: item.state | default('present') != 'absent'
       with_items: "{{ nginx_vhosts }}"
-
+      notify:
+        - Restart docker-compose
 
     - name: Remove managed vhost config files.
       ansible.builtin.file:
@@ -91,7 +102,8 @@
         state: absent
       when: item.state | default('present') == 'absent'
       with_items: "{{ nginx_vhosts }}"
-
+      notify:
+        - Restart docker-compose
 
 # DOCKER-COMPOSE
     - name: Install docker-compose
@@ -105,6 +117,9 @@
         mode: '0644'
         owner: root
         group: root
+      notify:
+        - Restart docker-build
+        - Restart docker-compose
 
     - name: Copy docker-compose.yaml
       ansible.builtin.template:
@@ -113,6 +128,8 @@
         mode: '0644'
         owner: root
         group: root
+      notify:
+        - Restart docker-compose
 
     - name: Run `docker-compose up`
       community.docker.docker_compose:
@@ -129,3 +146,13 @@
         user: "root"
         job: "cd {{ nginx_base_dir }} && docker-compose restart"
         cron_file: "docker_compose_restart"
+
+  handlers:
+    - name: Restart docker-compose
+      community.docker.docker_compose:
+        project_src: "{{ nginx_base_dir }}"
+        restarted: true
+    - name: Restart docker-build
+      community.docker.docker_compose:
+        project_src: "{{ nginx_base_dir }}"
+        build: true
