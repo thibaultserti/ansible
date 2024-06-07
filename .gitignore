@@ -167,5 +167,6 @@ cython_debug/
 
 .vscode
 venv/
-roles/
+roles/*
 !roles/requirements.yml
+!roles/k3s_*

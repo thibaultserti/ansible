@@ -3,6 +3,8 @@ collections:
     version: 8.6.1
   - name: prometheus.prometheus
     version: 0.16.3
+  - name: ansible.posix
+    version: 1.5.4
 roles:
 - name: geerlingguy.ansible
   src: geerlingguy.ansible
@@ -13,9 +15,6 @@ roles:
 - name: geerlingguy.docker
   src: geerlingguy.docker
   version: 7.2.0
-- name: geerlingguy.kubernetes
-  src: geerlingguy.kubernetes
-  version: 8.0.0
 - name: artis3n.tailscale
   src: artis3n.tailscale
   version: v4.5.0

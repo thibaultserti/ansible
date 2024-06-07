@@ -1,0 +1,16 @@
+---
+- name: Setup K3S controlplane
+  hosts: controlplane
+  become: true
+  vars_files:
+    - "env_vars/k3s.yml"
+  roles:
+    - role: k3s_server
+
+- name: Setup K3S dataplane
+  hosts: dataplane
+  become: true
+  vars_files:
+    - "env_vars/k3s.yml"
+  roles:
+    - role: k3s_agent

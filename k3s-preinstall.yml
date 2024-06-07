@@ -1,0 +1,58 @@
+- name: K3s pre-install
+  hosts: belt
+  become: true
+  vars_files:
+    - "env_vars/k3s.yml"
+  pre_tasks:
+    # DISABLE SWAP
+    - name: Check if swap is present
+      ansible.builtin.shell: |
+        swapon -s
+      register: swap
+      changed_when: false
+
+    - name: Disable SWAP since kubernetes can't work with swap enabled (1/2)
+      ansible.builtin.shell: |
+        swapoff -a
+      when: swap.stdout != ""
+      changed_when: true
+
+    - name: Disable SWAP in fstab since kubernetes can't work with swap enabled (2/2)
+      ansible.builtin.replace:
+        path: /etc/fstab
+        regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+        replace: '# \1'
+
+  roles:
+    - role: k3s_prereq
+
+- name: K3s preparation controlplanes
+  hosts: controlplane
+  become: true
+  vars_files:
+    - "env_vars/k3s.yml"
+  pre_tasks:
+
+    - name: Copy audit policy
+      ansible.builtin.template:
+        src: "k3s/audit-policy.yaml"
+        dest: "{{ audit_policy_file }}"
+        owner: "root"
+        group: "root"
+        mode: '0644'
+
+    - name: Copy webhook config
+      ansible.builtin.template:
+        src: "k3s/webhook-config.yaml"
+        dest: "{{ audit_webhook_config_file }}"
+        owner: "root"
+        group: "root"
+        mode: '0644'
+
+    - name: Copy custom resolv.conf for pods
+      ansible.builtin.template:
+        src: "k3s/kubelet-custom-resolv.conf"
+        dest: "{{ resolv_conf }}"
+        owner: "root"
+        group: "root"
+        mode: '0644'

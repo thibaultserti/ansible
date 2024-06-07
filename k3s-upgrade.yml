@@ -1,0 +1,18 @@
+---
+
+# Servers should be restarted sequientally to avoid etcd learner issues
+# Agents have no such limitation
+- name: Upgrade K3s controlplane
+  hosts: controlplane
+  become: true
+  vars_files:
+    - "env_vars/k3s.yml"
+  serial: 1
+  roles:
+    - role: k3s_upgrade
+
+- name: Upgrade K3s dataplane
+  hosts: dataplane
+  become: true
+  roles:
+    - role: k3s_upgrade

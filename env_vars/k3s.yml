@@ -1,0 +1,31 @@
+cilium_cli_version: 1.15.5
+
+k3s_server_location: "/var/lib/rancher/k3s"
+
+dns_ip: 192.168.1.40
+resolv_conf: "{{ k3s_server_location }}/kubelet-custom-resolv.conf"
+audit_policy_file:  "{{ k3s_server_location }}/server/audit.yaml"
+audit_webhook_config_file: "{{ k3s_server_location }}/server/webhook-config.yaml"
+
+
+k3s_version: v1.29.0+k3s4
+
+extra_server_args: --flannel-backend=none --disable-network-policy
+extra_agent_args: ""
+
+server_config_yaml: |
+  protect-kernel-defaults: true
+  secrets-encryption: true
+  kube-apiserver-arg:
+    - 'audit-log-path={{ k3s_server_location }}/server/logs/audit.log'
+    - 'audit-policy-file={{ audit_policy_file }}'
+    - 'audit-webhook-config-file={{ audit_webhook_config_file }}'
+    - 'audit-log-maxage=1'
+    - 'audit-log-maxbackup=10'
+    - 'audit-log-maxsize=100'
+  kube-controller-manager-arg:
+    - 'bind-address=0.0.0.0'
+  kube-scheduler-arg:
+    - 'bind-address=0.0.0.0'
+  kubelet-arg:
+    - 'resolv-conf={{ k3s_server_location }}/kubelet-custom-resolv.conf'
