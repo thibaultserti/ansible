@@ -7,3 +7,4 @@ packages:
   - traceroute
   - htop
   - stress
+  - update-manager-core
