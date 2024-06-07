@@ -1,38 +1,23 @@
 - name: K3s pre-install
-  hosts: belt
+  hosts: control
   become: true
   vars_files:
     - "env_vars/k3s.yml"
   pre_tasks:
-    # DISABLE SWAP
-    - name: Check if swap is present
-      ansible.builtin.shell: |
-        swapon -s
-      register: swap
-      changed_when: false
-
-    - name: Disable SWAP since kubernetes can't work with swap enabled (1/2)
-      ansible.builtin.shell: |
-        swapoff -a
-      when: swap.stdout != ""
-      changed_when: true
-
-    - name: Disable SWAP in fstab since kubernetes can't work with swap enabled (2/2)
-      ansible.builtin.replace:
-        path: /etc/fstab
-        regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
-        replace: '# \1'
-
-  roles:
-    - role: k3s_prereq
+    - name: Download the latest kubectl release
+      ansible.builtin.uri:
+        url: https://dl.k8s.io/release/v{{ kubectl_version }}/bin/linux/amd64/kubectl
+        dest: /usr/bin/
+        mode: "0755"
 
 - name: K3s preparation controlplanes
   hosts: controlplane
   become: true
   vars_files:
     - "env_vars/k3s.yml"
-  pre_tasks:
-
+  roles:
+    - role: k3s_prereq
+  post_tasks:
     - name: Copy audit policy
       ansible.builtin.template:
         src: "k3s/audit-policy.yaml"
@@ -56,3 +41,24 @@
         owner: "root"
         group: "root"
         mode: '0644'
+
+    - name: Download Kubernetes archive keyring
+      ansible.builtin.shell:
+        cmd: curl -fsSL  https://baltocdn.com/helm/signing.asc | gpg --yes --dearmor -o /usr/share/keyrings/helm.gpg
+
+    - name: Install Helm upstream repo
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main"
+        state: present
+
+    - name: Install Helm
+      ansible.builtin.apt:
+        name: helm
+        state: present
+
+    # CILIUM CLI
+    - name: Install Cilium CLI
+      ansible.builtin.unarchive:
+        src: "https://github.com/cilium/cilium-cli/releases/download/v{{ cilium_cli_version }}/cilium-linux-amd64.tar.gz"
+        dest: "/usr/local/bin"
+        copy: false

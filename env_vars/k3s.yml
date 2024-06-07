@@ -1,4 +1,5 @@
-cilium_cli_version: 1.15.5
+cilium_cli_version: 0.16.9
+kubectl_version: 1.30.0
 
 k3s_server_location: "/var/lib/rancher/k3s"
 
@@ -7,15 +8,15 @@ resolv_conf: "{{ k3s_server_location }}/kubelet-custom-resolv.conf"
 audit_policy_file:  "{{ k3s_server_location }}/server/audit.yaml"
 audit_webhook_config_file: "{{ k3s_server_location }}/server/webhook-config.yaml"
 
+api_endpoint: "192.168.1.41"
 
-k3s_version: v1.29.0+k3s4
+k3s_version: v1.29.4+k3s1
 
-extra_server_args: --flannel-backend=none --disable-network-policy
+extra_server_args: --flannel-backend=none --disable-network-policy --disable-kube-proxy --disable=traefik --disable=servicelb --tls-san 192.168.1.10,belt.ayanides.cloud
 extra_agent_args: ""
 
 server_config_yaml: |
   protect-kernel-defaults: true
-  secrets-encryption: true
   kube-apiserver-arg:
     - 'audit-log-path={{ k3s_server_location }}/server/logs/audit.log'
     - 'audit-policy-file={{ audit_policy_file }}'
