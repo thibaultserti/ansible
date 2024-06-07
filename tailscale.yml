@@ -12,16 +12,16 @@
     - name: Packet forwarding
       ansible.posix.sysctl:
         name: net.ipv4.ip_forward
-        value: '0'
+        value: '1'
         state: present
       when: is_exit_node
     - name: Packet forwarding
       ansible.posix.sysctl:
         name: net.ipv6.conf.all.forwarding
-        value: '0'
+        value: '1'
         state: present
       when: is_exit_node
   roles:
     - role: artis3n.tailscale
       vars:
-        tailscale_args: "--ssh {{ '--advertise-exit-node=true' if is_exit_node else ''}} {{ '--accept-dns=false' if is_dns else '' }}"
+        tailscale_args: "--ssh --timeout=2m0s --stateful-filtering {{ '--advertise-exit-node=true' if is_exit_node else ''}} {{ '--accept-dns=false' if is_dns else '' }}"
