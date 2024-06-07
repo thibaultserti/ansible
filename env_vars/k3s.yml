@@ -10,7 +10,7 @@ audit_webhook_config_file: "{{ k3s_server_location }}/server/webhook-config.yaml
 
 api_endpoint: "192.168.1.41"
 
-k3s_version: v1.29.4+k3s1
+k3s_version: v1.30.0+k3s1
 
 extra_server_args: --flannel-backend=none --disable-network-policy --disable-kube-proxy --disable=traefik --disable=servicelb --tls-san 192.168.1.10,belt.ayanides.cloud
 extra_agent_args: ""
