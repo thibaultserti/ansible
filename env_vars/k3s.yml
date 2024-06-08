@@ -16,7 +16,6 @@ extra_server_args: --flannel-backend=none --disable-network-policy --disable-kub
 extra_agent_args: ""
 
 server_config_yaml: |
-  protect-kernel-defaults: true
   kube-apiserver-arg:
     - 'audit-log-path={{ k3s_server_location }}/server/logs/audit.log'
     - 'audit-policy-file={{ audit_policy_file }}'
