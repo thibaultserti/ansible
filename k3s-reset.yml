@@ -19,6 +19,10 @@
       ansible.builtin.file:
         path: ~{{ ansible_user }}/.kube/config
         state: absent
+    - name: Remove root kubeconfig
+      ansible.builtin.file:
+        path: /root/.kube/config
+        state: absent
     - name: Remove k3s install script
       ansible.builtin.file:
         path: /usr/local/bin/k3s-install.sh
@@ -32,4 +36,9 @@
       when: server_config_yaml is defined
       ansible.builtin.file:
         path: /etc/rancher/k3s/config.yaml
+        state: absent
+    - name: Remove K3s kubeconfig
+      when: server_config_yaml is defined
+      ansible.builtin.file:
+        path: /etc/rancher/k3s/k3s.yaml
         state: absent
