@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coredns-custom # this is the name of the configmap you can overwrite with your changes
+  namespace: kube-system
+data:
+    custom.server: |
+      ayanides.cloud:53 {
+        forward . 192.168.1.40
+      }

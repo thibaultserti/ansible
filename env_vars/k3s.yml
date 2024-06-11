@@ -33,3 +33,4 @@ server_config_yaml: |
 
 extra_manifests:
   - "k3s/kube-vip.yaml"
+  - "k3s/coredns-custom.yaml"
