@@ -12,7 +12,7 @@ api_endpoint: "192.168.1.41"
 
 k3s_version: v1.30.0+k3s1
 
-extra_server_args: --flannel-backend=none --disable-cloud-controller --disable-network-policy --disable-helm-controller --disable-kube-proxy --disable=traefik --disable=servicelb --disable=local-storage --tls-san 192.168.1.10,belt.ayanides.cloud
+extra_server_args: --etcd-expose-metrics --flannel-backend=none --disable-cloud-controller --disable-network-policy --disable-helm-controller --disable-kube-proxy --disable=traefik --disable=servicelb --disable=local-storage --tls-san 192.168.1.10,belt.ayanides.cloud
 extra_agent_args: ""
 
 server_config_yaml: |
