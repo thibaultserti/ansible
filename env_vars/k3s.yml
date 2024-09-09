@@ -8,7 +8,7 @@ resolv_conf: "{{ k3s_server_location }}/kubelet-custom-resolv.conf"
 audit_policy_file:  "{{ k3s_server_location }}/server/audit.yaml"
 audit_webhook_config_file: "{{ k3s_server_location }}/server/webhook-config.yaml"
 
-api_endpoint: "192.168.1.41"
+api_endpoint: "192.168.1.42"
 
 k3s_version: v1.30.0+k3s1
 

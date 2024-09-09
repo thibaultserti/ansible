@@ -8,8 +8,8 @@ certbot_data_subpath: data/certbot
 certbot_data_dir: "{{nginx_base_dir}}/{{certbot_data_subpath}}"
 creds_path: "/var/www/cloudflare/dns_cloudflare_api_token.ini"
 
-nginx_image_tag: 1.23.1
-certbot_image_tag: v2.7.4
+nginx_image_tag: 1.27
+certbot_image_tag: v2.11.0
 
 certbot_create_command: |-
   certonly --noninteractive
@@ -103,17 +103,17 @@ wildcard_domain: ayanides.cloud
 nginx_listen_ipv6: false
 
 
-nginx_modules:
-  - module_path: /etc/nginx/modules/ngx_http_opentelemetry_module.so
-    conf: |
-      NginxModuleEnabled ON;
-      NginxModuleOtelSpanExporter otlp;
-      NginxModuleOtelExporterEndpoint collector:4317;
-      NginxModuleServiceName nginx;
-      NginxModuleServiceNamespace default;
-      NginxModuleServiceInstanceId eros;
-      NginxModuleResolveBackends ON;
-      NginxModuleTraceAsError Off;
+nginx_modules: []
+  # - module_path: /etc/nginx/modules/ngx_http_opentelemetry_module.so
+  #   conf: |
+  #     NginxModuleEnabled ON;
+  #     NginxModuleOtelSpanExporter otlp;
+  #     NginxModuleOtelExporterEndpoint collector:4317;
+  #     NginxModuleServiceName nginx;
+  #     NginxModuleServiceNamespace default;
+  #     NginxModuleServiceInstanceId eros;
+  #     NginxModuleResolveBackends ON;
+  #     NginxModuleTraceAsError Off;
 
 
 nginx_vhosts:
@@ -147,6 +147,7 @@ nginx_vhosts:
   - server_name: router.ayanides.cloud
     server_name_redirect: router.ayanides.cloud
     listen: 443 ssl http2
+    state: absent
     locations:
       - proxy_pass: http://192.168.1.1
         extra_parameters: |
@@ -159,6 +160,7 @@ nginx_vhosts:
   - server_name: box.ayanides.cloud
     server_name_redirect: box.ayanides.cloud
     listen: 443 ssl http2
+    state: absent
     locations:
       - proxy_pass: http://192.168.0.1
         extra_parameters: |
@@ -171,6 +173,7 @@ nginx_vhosts:
 # TRAEFIK
   - server_name: "*.ayanides.cloud"
     server_name_redirect: "*.ayanides.cloud"
+    state: absent
     listen: 443 ssl http2
     locations:
       - proxy_pass: https://192.168.1.100 # Traefik LB IP
@@ -187,6 +190,7 @@ nginx_vhosts:
   - server_name: teleport.ayanides.cloud
     server_name_redirect: teleport.ayanides.cloud
     listen: 443 ssl http2
+    state: absent
     public: true
     locations:
       - proxy_pass: https://192.168.1.101 # Teleport LB IP
@@ -199,6 +203,7 @@ nginx_vhosts:
   - server_name: ctfd.ayanides.cloud
     server_name_redirect: ctfd.ayanides.cloud
     listen: 443 ssl http2
+    state: absent
     public: true
     locations:
       - proxy_pass: https://192.168.1.100
@@ -211,6 +216,7 @@ nginx_vhosts:
   - server_name: challenge.ayanides.cloud
     server_name_redirect: challenge.ayanides.cloud
     listen: 443 ssl http2
+    state: absent
     public: true
     locations:
       - proxy_pass: https://192.168.1.100
@@ -223,6 +229,7 @@ nginx_vhosts:
   - server_name: hotrod.ayanides.cloud
     server_name_redirect: hotrod.ayanides.cloud
     listen: 443 ssl http2
+    state: absent
     public: true
     locations:
       - proxy_pass: https://192.168.1.100
@@ -235,6 +242,7 @@ nginx_vhosts:
   - server_name: ovh-certificate-api.ayanides.cloud
     server_name_redirect: ovh-certificate-api.ayanides.cloud
     listen: 443 ssl http2
+    state: absent
     public: true
     locations:
       - proxy_pass: https://192.168.1.100
@@ -247,6 +255,7 @@ nginx_vhosts:
   - server_name: yopass.ayanides.cloud
     server_name_redirect: yopass.ayanides.cloud
     listen: 443 ssl http2
+    state: absent
     public: true
     locations:
       - proxy_pass: https://192.168.1.100
@@ -260,6 +269,7 @@ nginx_vhosts:
   - server_name: stirling-pdf.ayanides.cloud
     server_name_redirect: stirling-pdf.ayanides.cloud
     listen: 443 ssl http2
+    state: absent
     public: true
     locations:
       - proxy_pass: https://192.168.1.100
@@ -273,6 +283,7 @@ nginx_vhosts:
   - server_name: status.ayanides.cloud
     server_name_redirect: status.ayanides.cloud
     listen: 443 ssl http2
+    state: absent
     public: true
     locations:
       - proxy_pass: https://192.168.1.100
@@ -285,6 +296,7 @@ nginx_vhosts:
   - server_name: home.ayanides.cloud
     server_name_redirect: home.ayanides.cloud
     listen: 443 ssl http2
+    state: absent
     public: true
     locations:
       - proxy_pass: https://192.168.1.100
@@ -297,6 +309,7 @@ nginx_vhosts:
   - server_name: buzzer.ayanides.cloud
     server_name_redirect: buzzer.ayanides.cloud
     listen: 443 ssl http2
+    state: absent
     public: true
     locations:
       - proxy_pass: https://192.168.1.100
