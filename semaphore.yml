@@ -8,7 +8,7 @@
   tasks:
     - name: Install semaphore deb
       ansible.builtin.apt:
-        deb: "https://github.com/ansible-semaphore/semaphore/releases/download/v{{ semaphore_version }}/semaphore_{{ semaphore_version }}_linux_amd64.deb"
+        deb: "https://github.com/semaphoreui/semaphore/releases/download/v{{ semaphore_version }}/semaphore_{{ semaphore_version }}_linux_amd64.deb"
 
     - name: Create config
       ansible.builtin.template:
