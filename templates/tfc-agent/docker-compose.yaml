@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   tfc_agent:
     container_name: tfc_agent

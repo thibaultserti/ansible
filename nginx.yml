@@ -106,10 +106,6 @@
         - Restart docker-compose
 
 # DOCKER-COMPOSE
-    - name: Install docker-compose
-      ansible.builtin.pip:
-        name: docker-compose
-
     - name: Copy dockerfile
       ansible.builtin.template:
         src: nginx/Dockerfile

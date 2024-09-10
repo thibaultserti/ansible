@@ -16,9 +16,6 @@
         - Restart systemd-resolved
         - Restart systemd-networkd
   tasks:
-    - name: Install docker-compose
-      ansible.builtin.pip:
-        name: docker-compose
     - name: Create directory
       ansible.builtin.file:
         path: /opt/pihole
