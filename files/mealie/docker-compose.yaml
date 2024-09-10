@@ -6,7 +6,7 @@ services:
     container_name: mealie
     restart: always
     ports:
-        - "10004:9000" #
+        - "10002:9000"
 
     volumes:
       - mealie-data:/app/data/
