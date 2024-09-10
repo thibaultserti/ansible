@@ -3,6 +3,7 @@ version: "3.0"
 services:
   stirling-pdf:
     container_name: stirling_pdf
+    restart: unless-stopped
     image: frooodle/s-pdf:0.28.3
     ports:
       - '10001:8080'
