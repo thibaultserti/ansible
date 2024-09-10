@@ -1,0 +1,29 @@
+---
+- name: Stirling-pdf
+  hosts: control
+  become: true
+  vars_files:
+    - "env_vars/stirling-pdf.yml"
+  tasks:
+    - name: Install docker-compose
+      ansible.builtin.pip:
+        name: docker-compose
+    - name: Create directory
+      ansible.builtin.file:
+        path: /opt/stirling-pdf
+        state: directory
+        owner: root
+        group: root
+        mode: '0644'
+    - name: Copy docker-compose.yaml
+      ansible.builtin.copy:
+        src: stirling-pdf/docker-compose.yaml
+        dest: /opt/stirling-pdf/docker-compose.yaml
+        mode: '0644'
+        owner: root
+        group: root
+    - name: Run `docker-compose up`
+      community.docker.docker_compose:
+        project_src: /opt/stirling-pdf
+        build: false
+      register: output

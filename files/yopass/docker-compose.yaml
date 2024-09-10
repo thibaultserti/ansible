@@ -1,0 +1,23 @@
+version: "3.0"
+
+services:
+  memcached:
+    container_name: yopass_memcached
+    image: memcached:1
+    restart: unless-stopped
+    expose:
+      - "11211"
+    networks:
+      - yopass
+  yopass:
+    container_name: yopass
+    image: jhaals/yopass:11:16.0
+    restart: unless-stopped
+    ports:
+      - "10000:80"
+    command: "--memcached=memcached:11211 --port 80"
+    networks:
+      - yopass
+networks:
+  yopass:
+    name: yopass
