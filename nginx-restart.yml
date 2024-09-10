@@ -1,0 +1,11 @@
+---
+- name: Restart nginx
+  hosts: control
+  become: true
+  vars_files:
+    - "env_vars/nginx.yml"
+  tasks:
+    - name: Restart docker-compose
+      community.docker.docker_compose_v2:
+        project_src: "{{ nginx_base_dir }}"
+        state: restarted
