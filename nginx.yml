@@ -146,10 +146,10 @@
 
   handlers:
     - name: Restart docker-compose
-      community.docker.docker_compose:
+      community.docker.docker_compose_v2:
         project_src: "{{ nginx_base_dir }}"
         restarted: true
-    - name: Restart docker-build
-      community.docker.docker_compose:
-        project_src: "{{ nginx_base_dir }}"
-        build: true
+    # - name: Restart docker-build
+    #   community.docker.docker_compose_v2:
+    #     project_src: "{{ nginx_base_dir }}"
+    #     build: true
