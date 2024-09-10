@@ -1,0 +1,26 @@
+---
+- name: Mealie
+  hosts: control
+  become: true
+  vars_files:
+    - "env_vars/mealie.yml"
+  tasks:
+    - name: Create directory
+      ansible.builtin.file:
+        path: /opt/mealie
+        state: directory
+        owner: root
+        group: root
+        mode: '0644'
+    - name: Copy docker-compose.yaml
+      ansible.builtin.copy:
+        src: mealie/docker-compose.yaml
+        dest: /opt/mealie/docker-compose.yaml
+        mode: '0644'
+        owner: root
+        group: root
+    - name: Run `docker-compose up`
+      community.docker.docker_compose_v2:
+        project_src: /opt/mealie
+        build: never
+      register: output

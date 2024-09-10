@@ -35,16 +35,16 @@
         project_src: /opt/pihole
         build: never
       register: output
-    - name: Create wildcard redirect
-      ansible.builtin.template:
-        src: pihole/02-my-wildcard-dns.conf
-        dest: /opt/pihole
-        owner: root
-        group: root
-        mode: '0644'
-    - name: Information
-      ansible.builtin.debug:
-        msg: Add a record on pihole Local DNS and delete it to reload dnsmask so that the wildcard zone is used
+    # - name: Create wildcard redirect
+    #   ansible.builtin.template:
+    #     src: pihole/02-my-wildcard-dns.conf
+    #     dest: /opt/pihole
+    #     owner: root
+    #     group: root
+    #     mode: '0644'
+    # - name: Information
+    #   ansible.builtin.debug:
+    #     msg: Add a record on pihole Local DNS and delete it to reload dnsmask so that the wildcard zone is used
 
   handlers:
     - name: Restart systemd-resolved
