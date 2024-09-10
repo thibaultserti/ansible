@@ -5,9 +5,6 @@
   vars_files:
     - "env_vars/stirling-pdf.yml"
   tasks:
-    - name: Install docker-compose
-      ansible.builtin.pip:
-        name: docker-compose
     - name: Create directory
       ansible.builtin.file:
         path: /opt/stirling-pdf
