@@ -128,9 +128,10 @@
         - Restart docker-compose
 
     - name: Run `docker-compose up`
-      community.docker.docker_compose:
+      community.docker.docker_compose_v2:
         project_src: "{{ nginx_base_dir }}"
-#        build: true
+        build: never
+#        build: always
 
 # RESTART DOCKER-COMPOSE EVERY WEEK
     - name: Créer le fichier de tâche cron pour Docker-compose

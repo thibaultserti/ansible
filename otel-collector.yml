@@ -35,9 +35,9 @@
         group: root
 
     - name: Run `docker-compose up`
-      community.docker.docker_compose:
+      community.docker.docker_compose_v2:
         project_src: "{{ otel_collector_dir }}"
-        build: false
+        build: never
 
   handlers:
     - name: Restart docker-compose

@@ -31,9 +31,9 @@
         owner: root
         group: root
     - name: Run `docker-compose up`
-      community.docker.docker_compose:
+      community.docker.docker_compose_v2:
         project_src: /opt/pihole
-        build: false
+        build: never
       register: output
     - name: Create wildcard redirect
       ansible.builtin.template:
