@@ -117,20 +117,7 @@ nginx_modules: []
 
 
 nginx_vhosts:
-# SEMAPHORE
-  - server_name: semaphore.ayanides.cloud
-    server_name_redirect: semaphore.ayanides.cloud
-    listen: 443 ssl
-    locations:
-      - proxy_pass: http://192.168.1.40:3000
-      - proxy_pass: http://192.168.1.40:3000/api/ws
-        path: /api/ws
-        default: false
-        extra_parameters: |
-          proxy_http_version 1.1;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection "upgrade";
-          proxy_set_header Origin "";
+
 
 # PIHOLE
   - server_name: pihole.ayanides.cloud
@@ -172,14 +159,18 @@ nginx_vhosts:
           proxy_set_header Upgrade $http_upgrade;
           proxy_set_header Connection "upgrade";
 
-# KUMA
-  - server_name: status.ayanides.cloud
-    server_name_redirect: status.ayanides.cloud
+# SEMAPHORE
+  - server_name: semaphore.ayanides.cloud
+    server_name_redirect: semaphore.ayanides.cloud
     listen: 443 ssl
     public: true
     locations:
-      - proxy_pass: http://192.168.1.40:10002
+      - proxy_pass: http://192.168.1.40:3000
+      - proxy_pass: http://192.168.1.40:3000/api/ws
+        path: /api/ws
+        default: false
         extra_parameters: |
           proxy_http_version 1.1;
           proxy_set_header Upgrade $http_upgrade;
           proxy_set_header Connection "upgrade";
+          proxy_set_header Origin "";
