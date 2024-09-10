@@ -1,0 +1,10 @@
+version: "3.0"
+
+services:
+  stirling-pdf:
+    container_name: kuma
+    image: louislam/uptime-kuma:1
+    ports:
+      - '10002:3001'
+    volumes:
+      - ./uptime-kuma:/app/data

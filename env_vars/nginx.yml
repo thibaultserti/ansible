@@ -171,3 +171,15 @@ nginx_vhosts:
           proxy_http_version 1.1;
           proxy_set_header Upgrade $http_upgrade;
           proxy_set_header Connection "upgrade";
+
+# KUMA
+  - server_name: status.ayanides.cloud
+    server_name_redirect: status.ayanides.cloud
+    listen: 443 ssl
+    public: true
+    locations:
+      - proxy_pass: http://192.168.1.40:10002
+        extra_parameters: |
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "upgrade";
