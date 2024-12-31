@@ -1,6 +1,6 @@
 collections:
   - name: community.general
-    version: 8.6.8
+    version: 8.6.9
   - name: prometheus.prometheus
     version: 0.23.0
   - name: ansible.posix
