@@ -17,7 +17,7 @@ roles:
   version: 7.4.7
 - name: artis3n.tailscale
   src: artis3n.tailscale
-  version: v4.6.0
+  version: v5.0.1
 - name: patrickjahns.promtail
   src: patrickjahns.promtail
   version: 1.31.0
