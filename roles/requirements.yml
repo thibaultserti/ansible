@@ -2,7 +2,7 @@ collections:
   - name: community.general
     version: 8.6.11
   - name: prometheus.prometheus
-    version: 0.27.0
+    version: 0.27.3
   - name: ansible.posix
     version: 1.6.2
 roles:
