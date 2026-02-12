@@ -9,7 +9,7 @@ services:
       - yopass
   yopass:
     container_name: yopass
-    image: jhaals/yopass:11.20.0
+    image: jhaals/yopass:12.5.0
     restart: unless-stopped
     ports:
       - "10000:80"
