@@ -4,7 +4,7 @@ collections:
   - name: prometheus.prometheus
     version: 0.30.1
   - name: ansible.posix
-    version: 1.6.2
+    version: 2.2.2
 roles:
 - name: geerlingguy.ansible
   src: geerlingguy.ansible
